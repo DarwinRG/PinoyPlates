@@ -9,7 +9,8 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.5.2",
     "nodemailer": "^6.9.14",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "sharp": "^0.33.4"
   },
   "name": "server",
   "version": "1.0.0",

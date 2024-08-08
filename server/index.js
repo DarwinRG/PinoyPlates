@@ -8,6 +8,7 @@ const connectDB = require('./db/connect')
 
 // Import routes
 const auth = require('./router/auth')
+const user = require('./router/user')
 
 const app = express()
 
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Use routes
 app.use('/auth', auth)
+app.use('/user', user)
 
 const port = process.env.PORT || 5000
 

@@ -11,6 +11,7 @@ export const Login = () => {
       const response = await api.post('auth/login', { email: loginData.email, password: loginData.password})
 
       if (response.status === 200) {
+        localStorage.setItem('username', response.data.username)
         alert(response.data.msg)
         navigate('/')
       }

@@ -5,15 +5,17 @@ import './App.css'
 const Authentication = lazy(() => import('./pages/auth/Auth'))
 const VerifyEmail = lazy(() => import('./pages/auth/VerifyEmail'))
 const Home = lazy(() => import('./pages/home/Home'))
+const Community = lazy(() => import('./pages/community/Community'))
 
 function App() {
- return (
+  return (
     <Router>
-      <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path="/auth" element={<Authentication />} />
-        <Route path="/verify-email/:email" element={<VerifyEmail />}/>
-      </Routes>
+        <Routes>
+          <Route path='/' element={<Home />} />
+          <Route path="/auth" element={<Authentication />} />
+          <Route path="/verify-email/:email" element={<VerifyEmail />} />
+          <Route path="/community" element={<Community />} />
+        </Routes>
     </Router>
   )
 }

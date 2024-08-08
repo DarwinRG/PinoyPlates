@@ -1,0 +1,51 @@
+/* home.css */
+.home-container {
+  background-image: url('home-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  height: 90vh;
+  font-family: "Merriweather Sans", sans-serif;
+}
+
+.home-contents {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  height: 85vh;
+  width: 90%;
+}
+
+h1 {
+  text-align: start;
+  justify-self: center;
+  color: white;
+  font-size: 3rem;
+  margin-left: 50px;
+  margin-bottom: 20px;
+}
+
+.home-contents form {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  margin-left: 50px;
+  width: 50%;
+}
+
+.select {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 180px;
+}
+
+.dish-input {
+  margin: 5px 0;
+  padding: 10px;
+  font-size: 1rem;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 350px;
+}
