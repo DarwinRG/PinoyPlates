@@ -10,6 +10,7 @@ const connectDB = require('./db/connect')
 const auth = require('./router/auth')
 const user = require('./router/user')
 const recipe = require('./router/recipe')
+const posts = require('./router/posts')
 
 const app = express()
 
@@ -30,6 +31,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/auth', auth)
 app.use('/user', user)
 app.use('/recipe', recipe)
+app.use('/posts', posts)
 
 const port = process.env.PORT || 5000
 
