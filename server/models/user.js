@@ -30,6 +30,10 @@ const UserSchema = mongoose.Schema({
   joinedDate: {
     type: Date, 
     default: Date.now 
+  },
+  role: {
+    type: String,
+    default: 'User'
   }
 })
 

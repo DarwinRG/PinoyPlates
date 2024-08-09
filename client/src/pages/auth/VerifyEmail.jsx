@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import api from '../../../utils/api'
-import '/auth.css'
+import './auth.css'
 
 const VerifyEmail = () => {
   const [ verificationCode, setVerificationCode ] = useState({})
