@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from '../context/AuthContext'
 import { Suspense, lazy } from 'react'
 import './App.css'
 
@@ -9,14 +10,16 @@ const Community = lazy(() => import('./pages/community/Community'))
 
 function App() {
   return (
-    <Router>
+    <AuthProvider>
+      <Router>
         <Routes>
           <Route path='/' element={<Home />} />
           <Route path="/auth" element={<Authentication />} />
           <Route path="/verify-email/:email" element={<VerifyEmail />} />
           <Route path="/community" element={<Community />} />
         </Routes>
-    </Router>
+     </Router>
+    </AuthProvider>
   )
 }
 

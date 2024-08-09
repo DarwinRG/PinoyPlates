@@ -47,6 +47,7 @@ router.get('/pending-posts', async (req, res) => {
   try {
     const pendingPosts = await Posts.find({ status: 'pending' }) // Fetch all posts with status 'pending'
 
+    // Check if there are any pending post
     if (!pendingPosts.length) {
       return res.status(404).json({ message: 'No pending posts found' })
     }

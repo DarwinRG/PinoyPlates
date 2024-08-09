@@ -1,9 +1,10 @@
 const mongoose = require('mongoose')
+const logger = require('../logger/logger')
 
 const connectDB = (url) => {
   return (
     mongoose.connect(url).then(() => {
-      console.log('Connected to Database')
+      logger.info('Connected to Database')
     }).catch((error) => console.log(error))
   )
 }

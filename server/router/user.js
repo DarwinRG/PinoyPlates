@@ -3,6 +3,7 @@ const express = require('express') // Importing Express framework
 const router = express.Router() // Creating a router object to handle routes
 const User = require('../models/user') // Importing the User model
 const sharp = require('sharp')
+const logger = require('../logger/logger')
 
 router.get('/get-user-data/:username', async (req, res) => {
   const { username } = req.params
@@ -26,7 +27,7 @@ router.get('/get-user-data/:username', async (req, res) => {
 
     res.status(200).json({ currentUser })
   } catch (err) {
-    console.error('Error getting user data:', err.message)
+    logger.error('Error getting user data:', err)
     res.status(500).json({ error: 'Server error' })
   }
 })
@@ -70,9 +71,9 @@ router.post('/upload-user-pic/:username', async (req, res, userRepository) => {
 
      // Respond with success message and resized image
     res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
-  } catch (error) {
+  } catch (err) {
     // Handle errors
-    console.error('Upload profile picture error:', error.message)
+    logger.error('Upload profile picture error:', err)
     res.status(500).json({ error: 'Failed to upload profile picture. Please try again later.' })
   }
 }

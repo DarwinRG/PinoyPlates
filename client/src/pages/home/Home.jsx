@@ -4,17 +4,19 @@ import { ProfileSection } from '../../components/ProfileSection'
 import './Home.css'
 import { RecipeRecommendations } from './Recommendation'
 import { useNavigate } from 'react-router-dom'
+import usePrivateApi from '../../../hooks/usePrivateApi'
 
 const Home = () => {
   const [showProfileSection, setShowProfileSection] = useState(false)
   const [ingredients, setIngredients] = useState('')
   const [recommendations, setRecommendations] = useState([])
   const [navigateToCommunity, setNavigateToCommunity] = useState(false)
+  const privateAxios = usePrivateApi()
   const navigate = useNavigate()
 
   const fetchRecommendations = async () => {
     try {
-      const response = await api.post('recipe/get-recommendations', {
+      const response = await privateAxios.post('recipe/get-recommendations', {
         ingredients: ingredients
       })
       const data = response.data

@@ -1,16 +1,25 @@
 import { useState } from "react"
 import api from "../../../utils/api"
 import { useNavigate } from 'react-router-dom'
+import useAuth from "../../../hooks/useAuth"
 
 export const Login = () => {
   const [ loginData, setLoginData ] = useState({})
   const navigate = useNavigate()
+  const { setAuth } = useAuth()
 
   const handleLogin = async() => {
     try {
-      const response = await api.post('auth/login', { email: loginData.email, password: loginData.password})
+      const response = await api.post('auth/login', { email: loginData.email, password: loginData.password}, { withCredentials: true })
 
+      console.log(response)
       if (response.status === 200) {
+        const { userID, role, accessToken } = response.data
+
+        setAuth({ accessToken })
+
+        localStorage.setItem('userID', userID)
+        localStorage.setItem('userRole', role)
         localStorage.setItem('username', response.data.username)
         alert(response.data.msg)
         navigate('/')

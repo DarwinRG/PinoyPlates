@@ -6,6 +6,8 @@ const bcrypt = require('bcrypt') // Importing bcrypt for password hashing
 const nodemailer = require('nodemailer') // Importing nodemailer for sending emails
 const crypto = require('crypto') // Importing crypto for generating random codes
 const dotenv = require('dotenv')
+const logger = require('../logger/logger')
+const { generateTokens } = require('../middleware/verifyToken')
 dotenv.config()
 
 // Function to hash the password
@@ -15,7 +17,7 @@ const hashPassword = async (password) => {
     return await bcrypt.hash(password, 10)
   } catch (error) {
     // Handle errors and throw an error for the caller to handle
-    console.error('Error hashing password:', error.message)
+    logger.error('Error hashing password:', error)
     throw new Error('Failed to hash password.')
   }
 }
@@ -62,7 +64,7 @@ const sendVerificationEmail = async (email, verificationCode) => {
     await transporter.sendMail(mailOptions)
   } catch (error) {
     // Handle errors and throw an error for the caller to handle
-    console.error('Error sending verification email:', error.message)
+    logger.error('Error sending verification email:', error.message)
     throw new Error('Failed to send verification email.')
   }
 }
@@ -78,7 +80,7 @@ const generateVerificationCode = () => {
 router.post('/register', async (req, res) => {
   const { username, email, password, passwordConfirmation } = req.body
   try {
-    console.log(req.body)
+    logger.info('Registering user with email:', email)
 
     // Check if all required fields are filled
     if (!username || !email || !password || !passwordConfirmation) {
@@ -138,11 +140,13 @@ router.post('/register', async (req, res) => {
     // Send verification email
     await sendVerificationEmail(email, verificationCode)
 
+    logger.info(`Verification email sent to: ${email}`)
+
     // Respond with success message
     res.status(201).json({ msg: 'Verification code sent. Please check your email' })
 
   } catch (err) {
-    console.error('Error registering user:', err.message)
+    logger.error('Error registering user:', err)
     res.status(500).json({ error: 'Server error' })
   }
 })
@@ -173,10 +177,12 @@ router.post('/verify-email', async(req, res) => {
     user.verificationCode = null
     await user.save()
 
+    logger.info(`User verified: ${email}`)
+
     // Respond with success message
     res.status(200).json({ msg: 'Email verified successfully. User registered.' })
   } catch (err) {
-    console.log((`Error verifying email: ${err.message}`))
+    console.log((`Error verifying email: ${err}`))
     res.status(500).json({ error : 'Error verifying email. Please try again later.' })
   }
 })
@@ -184,7 +190,9 @@ router.post('/verify-email', async(req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body
   try {
-    console.log(req.body)
+
+    logger.info('User login attempt:', email)
+
     // Check if all required fields are filled
     if (!email || !password) {
       return res.status(400).json({ error: 'Please fill in the required fields' })
@@ -215,14 +223,37 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ error: 'Please verify your email first'})
     }
 
+    // Generate tokens
+    const tokens = generateTokens(user)
+
+    // Set cookies with access and refresh tokens
+    const accessToken = tokens.accessToken
+    const refreshToken = tokens.refreshToken
+    
+    res.cookie('refreshToken', refreshToken, { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
+
+    res.cookie('accessToken', accessToken, { 
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
+
+    logger.info(`User logged in successfully: ${email}`)
+
      res.status(200).json({
       username: user.username,
       msg: 'User logged in successfully',
       userId: user._id,
       userRole: user.role,
+      accessToken,
+      refreshToken
     })
   } catch (err) {
-    console.error('Error logging in user:', err.message)
+    logger.error('Error logging in user:', err)
     res.status(500).json({ error: 'Server error' })
   }
 })
