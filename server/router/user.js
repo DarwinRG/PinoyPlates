@@ -20,7 +20,8 @@ router.get('/get-user-data/:username', async (req, res) => {
     const currentUser = {
       username: user.username,
       email: user.email,
-      profilePic: user.profilePic
+      profilePic: user.profilePic,
+      joinedDate: user.joinedDate,
     }
 
     res.status(200).json({ currentUser })

@@ -77,7 +77,6 @@ const generateVerificationCode = () => {
 // Route for user registration
 router.post('/register', async (req, res) => {
   const { username, email, password, passwordConfirmation } = req.body
-
   try {
     console.log(req.body)
 
@@ -129,7 +128,8 @@ router.post('/register', async (req, res) => {
       username,
       email,
       password: hashedPassword,
-      verificationCode
+      verificationCode,
+      joinedDate: new Date()
     })
 
     // Save the new user to the database

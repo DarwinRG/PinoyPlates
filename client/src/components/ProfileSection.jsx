@@ -82,8 +82,15 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
               Change Profile Picture
             </button>
           )}
-          <h2>{user.username}</h2>
+          <h2>Username: {user.username}</h2>
+          <h3>Joined Date: {new Date(user.joinedDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</h3>
         </div>
+        <button
+            className='hide-profile-section'
+            onClick={() => setShowProfileSection(false)}
+          >
+            x
+          </button>
       </div>
       )}
     </>

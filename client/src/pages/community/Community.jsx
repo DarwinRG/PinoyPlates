@@ -19,7 +19,7 @@ const Community = () => {
     console.log('Ingredients:', ingredients)
     console.log('Image:', image)
     // Handle form submission, e.g., send data to a server
-  };
+  }
 
   // Fetch posts on component mount
   useEffect(() => {
@@ -35,7 +35,8 @@ const Community = () => {
   }, [])
 
   return (
-    <div className="community-container">
+    <div className=''>
+      <div className="community-container">
       <h1>Share Your Recipe</h1>
       <form onSubmit={handleSubmit} className="recipe-form">
         <div className="form-group">
@@ -86,6 +87,7 @@ const Community = () => {
           <p>No posts yet. Be the first to share a recipe!</p>
         )}
       </div>
+    </div>
     </div>
   )
 }
