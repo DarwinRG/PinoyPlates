@@ -2,3 +2,7 @@
 2024-08-10 06:14:50 [ERROR]: Error logging in user:
 2024-08-10 06:16:05 [ERROR]: Error logging in user:
 2024-08-10 06:16:27 [ERROR]: Error logging in user: secretOrPrivateKey must have a value
+2024-08-10 07:00:31 [ERROR]: Error getting recommendations:
+2024-08-10 09:32:42 [ERROR]: Error unliking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c5523472" (type string) at path "_id" for model "Posts"
+2024-08-10 09:48:12 [ERROR]: Error unliking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c552347" (type string) at path "_id" for model "Posts"
+2024-08-10 10:28:19 [ERROR]: Error liking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c552347" (type string) at path "_id" for model "Posts"

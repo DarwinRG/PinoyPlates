@@ -1,83 +1,25 @@
 // Import necessary modules and packages
 const express = require('express') // Importing Express framework
 const router = express.Router() // Creating a router object to handle routes
-const User = require('../models/user') // Importing the User model
-const sharp = require('sharp')
-const logger = require('../logger/logger')
+const {
+  getUserData,
+  uploadProfilePic,
+  followUser,
+  unfollowUser
+} = require('../controller/userController')
 
-router.get('/get-user-data/:username', async (req, res) => {
-  const { username } = req.params
-  try {
-    if (!username) {
-      return res.status(400).json({ error: 'Parameters not found'})
-    }
+// Route for getting the user data
+router.get('/get-user-data/:username', (req, res) => getUserData(req, res) )
 
-    const user = await User.findOne({ username: username })
+// Route for uploading user profile picture
+router.post('/upload-user-pic/:username', (req, res) => uploadProfilePic(req, res))
 
-    if (!user) {
-      return res.status(400).json({ error: 'User not found'})
-    }
+// Route for following another user
+router.post('/follow/:username/:followingUsername', (req, res) => followUser(req, res))
 
-    const currentUser = {
-      username: user.username,
-      email: user.email,
-      profilePic: user.profilePic,
-      joinedDate: user.joinedDate,
-    }
+// Route for unfollowing another user
+router.post('/unfollow/:username/:followingUsername', (req, res) => unfollowUser(req, res))
 
-    res.status(200).json({ currentUser })
-  } catch (err) {
-    logger.error('Error getting user data:', err)
-    res.status(500).json({ error: 'Server error' })
-  }
-})
-
-router.post('/upload-user-pic/:username', async (req, res, userRepository) => {
-  // Extracts necessary details from request body and parameters
-  const { base64Image } = req.body
-  const username = req.params.username
-
-  try {
-    // Allowed image formats
-    const allowedFormats = ['jpeg', 'jpg', 'png']
-     // Detect the image format from base64 string
-    const detectedFormat = base64Image.match(/^data:image\/(\w+);base64,/)
-    const imageFormat = detectedFormat ? detectedFormat[1] : null
-
-      // Check if image format is supported
-    if (!imageFormat || !allowedFormats.includes(imageFormat.toLowerCase())) {
-      return res.status(400).json({ error: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
-    }
-
-     // Convert base64 image to buffer
-    const imageBuffer = Buffer.from(base64Image.split(',')[1], 'base64')
-
-    // Resize the image
-    const resizedImage = await sharp(imageBuffer)
-      .resize({
-        fit: 'cover',
-        width: 200,
-        height: 200,
-        withoutEnlargement: true,
-      })
-      .toFormat(imageFormat)
-      .toBuffer()
-
-    // Convert resized image buffer to base64
-    const resizedImageBase64 = `data:image/${imageFormat};base64,${resizedImage.toString('base64')}`
-
-    // Update user profile picture in the database
-    await User.findOneAndUpdate({ username: username }, { profilePic: resizedImageBase64 }, {new: true})
-
-     // Respond with success message and resized image
-    res.status(200).json({ msg: 'Profile picture uploaded successfully', resizedImage: resizedImageBase64 })
-  } catch (err) {
-    // Handle errors
-    logger.error('Upload profile picture error:', err)
-    res.status(500).json({ error: 'Failed to upload profile picture. Please try again later.' })
-  }
-}
-)
 
 
 module.exports = router

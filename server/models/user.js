@@ -34,7 +34,23 @@ const UserSchema = mongoose.Schema({
   role: {
     type: String,
     default: 'User'
-  }
+  },
+  following: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  followers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }],
+  likes: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Posts'
+  }],
+  saved: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Posts'
+  }]
 })
 
 module.exports = mongoose.model('User', UserSchema)

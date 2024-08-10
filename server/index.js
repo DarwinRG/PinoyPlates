@@ -3,7 +3,6 @@ const cors = require('cors')
 const dotenv = require('dotenv')
 const logger = require('./logger/logger')
 const cookieParser = require('cookie-parser')
-const morgan = require('morgan')
 dotenv.config()
 
 // Import the connectDB function to establish a connection with MongoDB
@@ -29,8 +28,21 @@ app.use(cors(corsOptions))
 app.use(cookieParser())
 
 // Middleware to parse JSON and URL-encoded data
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use((req, res, next) => {
+  const start = Date.now()
+  const { method, url, body, params } = req
+  logger.info(`Incoming request: ${method} ${url} - Params: ${JSON.stringify(params)} - Body: ${JSON.stringify(body)}`)
+  
+  res.on('finish', () => {
+    const duration = Date.now() - start
+    logger.info(`Request completed: ${method} ${url} - Status: ${res.statusCode} - Duration: ${duration}ms`)
+  })
+
+  next()
+})
 
 // Use routes
 app.use('/auth', auth)
