@@ -9,7 +9,8 @@ const {
   unlikePost,
   getGlobalPosts,
   getFollowingPosts,
-  acceptPendingPost
+  acceptPendingPost,
+  rejectPendingPost
 } = require('../controller/postsController')
 
 router.post('/create-post/:userID', (req, res) => (createPost(req, res)))
@@ -27,5 +28,7 @@ router.get('/global-posts', (req, res) => (getGlobalPosts(req, res)))
 router.get('/following-posts/:userID', (req, res) => (getFollowingPosts(req, res)))
 
 router.put('/accept-post/:postID', checkRole([ROLES.MODERATOR]), (req, res) => (acceptPendingPost(req, res)))
+
+router.put('/reject-post/:postID', checkRole([ROLES.MODERATOR]), (req, res) => (rejectPendingPost(req, res)))
 
 module.exports = router

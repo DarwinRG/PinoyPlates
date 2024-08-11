@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 // Comment schema
 const CommentSchema = mongoose.Schema({
@@ -15,7 +15,7 @@ const CommentSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   }
-});
+})
 
 // Posts schema with indexes
 const PostsSchema = mongoose.Schema({
@@ -50,9 +50,9 @@ const PostsSchema = mongoose.Schema({
     ref: 'User',
   }],
   comments: [CommentSchema]
-});
+})
 
 // Additional index on hearts (array field)
-PostsSchema.index({ hearts: 1 });
+PostsSchema.index({ hearts: 1 })
 
-module.exports = mongoose.model('Posts', PostsSchema);
+module.exports = mongoose.model('Posts', PostsSchema)

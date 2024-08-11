@@ -14,34 +14,38 @@ const createPost = async (req, res) => {
       return res.status(400).json({ error: 'Dish name and Ingredients are required' })
     }
 
-    // Allowed image formats
-    const allowedFormats = ['jpeg', 'jpg', 'png']
-    // Detect the image format from base64 string
-   const detectedFormat = dishImage.match(/^data:image\/(\w+);base64,/)
-   const imageFormat = detectedFormat ? detectedFormat[1] : null
+    let resizedImageBase64 = ''
 
-     // Check if image format is supported
-   if (!imageFormat || !allowedFormats.includes(imageFormat.toLowerCase())) {
-     logger.warn('Unsupported image format received:', imageFormat)
-     return res.status(400).json({ error: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
-   }
+    if (dishImage) {
+      // Allowed image formats
+      const allowedFormats = ['jpeg', 'jpg', 'png']
+      // Detect the image format from base64 string
+      const detectedFormat = dishImage.match(/^data:image\/(\w+);base64,/)
+      const imageFormat = detectedFormat ? detectedFormat[1] : null
 
-    // Convert base64 image to buffer
-   const imageBuffer = Buffer.from(dishImage.split(',')[1], 'base64')
+      // Check if image format is supported
+      if (!imageFormat || !allowedFormats.includes(imageFormat.toLowerCase())) {
+        logger.warn('Unsupported image format received:', imageFormat)
+        return res.status(400).json({ error: 'Unsupported image format. Please upload a JPEG, JPG, or PNG image.' })
+      }
 
-   // Resize the image
-   const resizedImage = await sharp(imageBuffer)
-     .resize({
-       fit: 'cover',
-       width: 200,
-       height: 200,
-       withoutEnlargement: true,
-     })
-     .toFormat(imageFormat)
-     .toBuffer()
+      // Convert base64 image to buffer
+      const imageBuffer = Buffer.from(dishImage.split(',')[1], 'base64')
 
-   // Convert resized image buffer to base64
-   const resizedImageBase64 = `data:image/${imageFormat};base64,${resizedImage.toString('base64')}`
+      // Resize the image
+      const resizedImage = await sharp(imageBuffer)
+        .resize({
+          fit: 'cover',
+          width: 200,
+          height: 200,
+          withoutEnlargement: true,
+        })
+        .toFormat(imageFormat)
+        .toBuffer()
+
+      // Convert resized image buffer to base64
+      resizedImageBase64 = `data:image/${imageFormat};base64,${resizedImage.toString('base64')}`
+    }
 
     if (!userID) {
       return res.status(400).json({ error: 'User ID is required' })
@@ -50,13 +54,13 @@ const createPost = async (req, res) => {
     const user = await User.findById(userID)
 
     if (!user) {
-      return res.status(400).json({ error: 'User is not found' })
+      return res.status(400).json({ error: 'User not found' })
     }
 
-    newPost = new Posts({
+    const newPost = new Posts({
       dishName,
       ingredients,
-      dishImage: resizedImageBase64 || '', // Default to an empty string if no image provided
+      dishImage: resizedImageBase64, // Either resized image or an empty string
       postOwner: userID,
       createdAt: new Date(),
     })
@@ -64,7 +68,7 @@ const createPost = async (req, res) => {
     // Save the post to the database
     await newPost.save()
 
-    logger.info('Post created succesfully by:', userID)
+    logger.info('Post created successfully by:', userID)
 
     // Respond with the created post
     res.status(201).json({ message: 'Post created successfully, please wait as our moderator will review it first.' })
@@ -444,6 +448,29 @@ const acceptPendingPost = async (req, res) => {
   }
 }
 
+const rejectPendingPost = async (req, res) => {
+  const { postID } = req.params
+
+  try {
+    if (!postID) {
+      return res.status(400).json({ error: 'Post ID is required'})
+    }
+
+    const post = await Posts.findById(postID)
+
+    if (!post) {
+      return res.status(400).json({ error: 'Post is not found'})
+    }
+
+    await Posts.findOneAndUpdate({ _id: postID}, { status : 'rejected' }, { new: true})
+
+    res.status(200).json({ msg: 'Post has been rejected succesfully' })
+  } catch(err) {
+    logger.error('Error accepting pending posts:', err)
+    res.status(500).json({ error: 'Server error' })
+  }
+}
+
 module.exports = {
   createPost,
   likePost,
@@ -452,5 +479,6 @@ module.exports = {
   getFollowingPosts,
   getCommunityPosts,
   fetchPendingPosts,
-  acceptPendingPost
+  acceptPendingPost,
+  rejectPendingPost
 } 
