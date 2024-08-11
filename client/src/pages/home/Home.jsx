@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import api from '../../../utils/api'
 import { ProfileSection } from '../../components/ProfileSection'
 import './Home.css'
-import { RecipeRecommendations } from './Recommendation'
+import RecipeRecommendations from './Recommendation'
 import { useNavigate } from 'react-router-dom'
 import usePrivateApi from '../../../hooks/usePrivateApi'
 
@@ -16,13 +16,18 @@ const Home = () => {
 
   const fetchRecommendations = async () => {
     try {
+      if (ingredients.length === 0) {
+        return alert('Please input an ingredient')
+      }
+
       const response = await privateAxios.post('recipe/get-recommendations', {
         ingredients: ingredients
       })
       const data = response.data
       setRecommendations(data)
-    } catch (error) {
-      console.error('Error fetching recommendations:', error)
+    } catch (err) {
+      alert(err.response.data.error)
+      console.error('Error fetching recommendations:', err)
     }
   }
 

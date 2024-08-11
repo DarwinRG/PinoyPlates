@@ -1,4 +1,4 @@
-export const RecipeRecommendations = ({ recommendations }) => {
+const RecipeRecommendations = ({ recommendations }) => {
   return (
     <div className="recipe-container">
       {recommendations.length > 0 && 
@@ -26,3 +26,6 @@ export const RecipeRecommendations = ({ recommendations }) => {
     </div>
   )
 }
+
+
+export default RecipeRecommendations

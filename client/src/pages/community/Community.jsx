@@ -1,42 +1,105 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, startTransition } from 'react'
+import usePrivateApi from '../../../hooks/usePrivateApi'
 import './community.css' // Make sure to create or update this CSS file for styling
 
 const Community = () => {
-  const [dishName, setDishName] = useState('')
-  const [ingredients, setIngredients] = useState('')
-  const [image, setImage] = useState(null)
+  // Combine state into a single object
+  const [dishData, setDishData] = useState({})
   const [posts, setPosts] = useState([])
+  const privateAxios = usePrivateApi()
+  const [ base64Image, setBase64Image ] = useState('')
+  const userID = localStorage.getItem('userID')
 
-  // Handle input changes
-  const handleDishNameChange = (e) => setDishName(e.target.value)
-  const handleIngredientsChange = (e) => setIngredients(e.target.value)
-  const handleImageChange = (e) => setImage(e.target.files[0])
+  // Handle input changes for dish data
+  const handleFieldChange = (e) => {
+    const { name, value } = e.target
+    setDishData((prevData) => ({
+      ...prevData,
+      [name]: value
+    }))
+  }
+
+  const convertToBase64 = (e) => {
+    const file = e.target.files[0]
+
+    if (file) {
+      const reader = new FileReader()
+      reader.readAsDataURL(file)
+
+      reader.onload = () => {
+        console.log(reader.result)
+        setBase64Image(reader.result)
+      }
+
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error)
+      }
+    }
+  }
+
+  // Handle image file change separately
+  const handleImageChange = (e) => {
+    setDishData((prevData) => ({
+      ...prevData,
+      image: e.target.files[0]
+    }))
+  }
 
   // Handle form submission
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Dish Name:', dishName)
-    console.log('Ingredients:', ingredients)
-    console.log('Image:', image)
-    // Handle form submission, e.g., send data to a server
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    // Implement form submission logic, e.g., send data to server
+    console.log('Dish Data:', dishData)
+    // You can use FormData to handle file uploads
+    const formData = new FormData()
+    formData.append('dishName', dishData.dishName)
+    formData.append('ingredients', dishData.ingredients)
+    if (base64Image) {
+      formData.append('dishImage', base64Image)
+    }
+    try {
+      console.log(userID)
+      const response = await privateAxios.post(`/posts/create-post/${userID}`, formData)
+
+      if (response.status === 201) {
+        alert(response.data.message)
+        startTransition(() => {
+          setDishData({})
+        })
+      }
+    } catch (error) {
+      console.error('Error submitting recipe:', error)
+    }
   }
 
   // Fetch posts on component mount
   useEffect(() => {
-    // Replace with your API call to fetch posts
     const fetchPosts = async () => {
-      // Example fetch call, replace with actual API endpoint
-      const response = await fetch('/api/posts')
-      const data = await response.json()
-      setPosts(data);
+      try {
+        const response = await privateAxios('/posts/global-posts', { params: { page: 1, limit: 10 } })
+        console.log(response.data.globalPosts)
+        setPosts(response.data.globalPosts)
+      } catch (error) {
+        console.error('Error fetching posts:', error)
+      }
     }
-
     fetchPosts()
-  }, [])
+  }, [privateAxios])
+
+  // Handle like button click
+  const handleLike = (postId) => {
+    // Implement like functionality
+    console.log('Like post with ID:', postId)
+  }
+
+  // Handle comment button click
+  const handleComment = (postId) => {
+    // Implement comment functionality
+    console.log('Comment on post with ID:', postId)
+  }
 
   return (
-    <div className=''>
-      <div className="community-container">
+    <div className="community-container">
       <h1>Share Your Recipe</h1>
       <form onSubmit={handleSubmit} className="recipe-form">
         <div className="form-group">
@@ -44,8 +107,9 @@ const Community = () => {
           <input
             type="text"
             id="dishName"
-            value={dishName}
-            onChange={handleDishNameChange}
+            name="dishName"
+            value={dishData.dishName}
+            onChange={handleFieldChange}
             placeholder="Enter the name of the dish"
             required
           />
@@ -54,8 +118,9 @@ const Community = () => {
           <label htmlFor="ingredients">Ingredients:</label>
           <textarea
             id="ingredients"
-            value={ingredients}
-            onChange={handleIngredientsChange}
+            name="ingredients"
+            value={dishData.ingredients}
+            onChange={handleFieldChange}
             placeholder="Enter the ingredients, separated by commas"
             required
           />
@@ -64,23 +129,38 @@ const Community = () => {
           <label htmlFor="image">Dish Image:</label>
           <input
             type="file"
-            id="image"
-            accept="image/*"
-            onChange={handleImageChange}
+            accept=".jpeg, .jpg, .png"
+            onChange={convertToBase64}
           />
         </div>
         <button type="submit">Submit Recipe</button>
       </form>
-      
+
       <div className="posts-container">
         <h2>Community Posts</h2>
         {posts.length > 0 ? (
-          posts.map((post, index) => (
-            <div key={index} className="post">
-              <h3>{post.dishName}</h3>
-              <p>{post.ingredients}</p>
-              {post.image && <img src={post.image} alt={post.dishName} className="post-image" />}
-              {/* You can add more details or styling as needed */}
+          posts.map((post) => (
+            <div key={post._id} className="post">
+              <div className="post-header">
+                <img src={post.userProfilePic} alt={post.username} className="user-profile-pic" />
+                <div className="post-user-info">
+                  <h3>{post.username}</h3>
+                  <p>{new Date(post.datePosted).toLocaleDateString()}</p>
+                </div>
+              </div>
+              <div className="post-content">
+                <h4>Dish Name: {post.dishName}</h4>
+                <p>Ingredients: {post.ingredients}</p>
+                {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
+              </div>
+              <div className="post-actions">
+                <button onClick={() => handleLike(post._id)} className="like-button">
+                  ❤️ {post.hearts}
+                </button>
+                <button onClick={() => handleComment(post._id)} className="comment-button">
+                  💬 Comment
+                </button>
+              </div>
             </div>
           ))
         ) : (
@@ -88,8 +168,7 @@ const Community = () => {
         )}
       </div>
     </div>
-    </div>
   )
 }
 
-export default Community;
+export default Community

@@ -16,6 +16,8 @@ export const Login = () => {
       if (response.status === 200) {
         const { userID, role, accessToken } = response.data
 
+        console.log(userID)
+
         setAuth({ accessToken })
 
         localStorage.setItem('userID', userID)
