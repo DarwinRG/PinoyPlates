@@ -256,7 +256,7 @@ const logIn  = async (req, res) => {
     res.status(200).json({
       username: user.username,
       msg: 'User logged in successfully',
-      userId: user._id,
+      userID: user._id,
       userRole: user.role,
       accessToken,
       refreshToken

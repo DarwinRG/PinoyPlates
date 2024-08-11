@@ -10,14 +10,14 @@ const generateTokens = (user) => {
   const accessToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '30m' } 
+    { expiresIn: '10m' } 
   )
 
   // Generate refresh token with a 3-hour expiry
   const refreshToken = jwt.sign(
     { id: user._id, role: user.role },
     secretKey,
-    { expiresIn: '3h' } 
+    { expiresIn: '2h' } 
   )
 
   return { accessToken, refreshToken }

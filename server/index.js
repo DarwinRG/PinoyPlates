@@ -27,11 +27,18 @@ const corsOptions = {
 app.use(cors(corsOptions))
 app.use(cookieParser())
 
-// Middleware to parse JSON and URL-encoded data
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+// Configure Express to parse JSON requests with a maximum size limit of 50mb
+app.use(express.json({ limit: '100mb' }))
+app.use(express.urlencoded({ extended: true, limit: '100mb', parameterLimit: 1000000 }))
+
 
 app.use((req, res, next) => {
+  // Skip logging for specific routes
+  const skippedRoutes = ['/posts/create-post', '/user/upload-profile-pic'];
+  if (skippedRoutes.some(route => req.url.startsWith(route))) {
+    return next();
+  }
+
   const start = Date.now()
   const { method, url, body, params } = req
   logger.info(`Incoming request: ${method} ${url} - Params: ${JSON.stringify(params)} - Body: ${JSON.stringify(body)}`)
