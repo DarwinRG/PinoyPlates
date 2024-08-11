@@ -1,5 +1,6 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
+// Comment schema
 const CommentSchema = mongoose.Schema({
   content: {
     type: String,
@@ -14,38 +15,44 @@ const CommentSchema = mongoose.Schema({
     type: Date,
     default: Date.now,
   }
-})
+});
 
-const PostsSchema = mongoose.Schema ({
+// Posts schema with indexes
+const PostsSchema = mongoose.Schema({
   dishName: {
     type: String,
     required: true,
-  }, 
+  },
   ingredients: {
     type: String,
     required: true,
   },
   dishImage: {
-    type: String
+    type: String,
   },
   status: {
     type: String,
-    default: "pending"
+    default: "pending",
   },
   datePosted: {
-    type: Date, 
-    default: Date.now 
+    type: Date,
+    default: Date.now,
+    index: true, // Index on datePosted
   },
   postOwner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: true,
+    index: true, // Index on postOwner
   },
   hearts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
   }],
   comments: [CommentSchema]
-})
+});
 
-module.exports = mongoose.model('Posts', PostsSchema)
+// Additional index on hearts (array field)
+PostsSchema.index({ hearts: 1 });
+
+module.exports = mongoose.model('Posts', PostsSchema);
