@@ -1,60 +1,109 @@
 /* General Container Styles */
 .community-container {
-  max-width: 800px;
-  margin: 0 auto;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr 3fr 1fr;
+  gap: 20px;
   padding: 20px;
   font-family: 'Roboto', sans-serif;
-  background-color: #f4f4f4; /* Light background for contrast */
+  background-color: #C9DABF;
+  height: 100vh;
+  box-sizing: border-box;
 }
 
-/* Header Styles */
-.community-container h1 {
-  color: #333;
+/* User Details Styles */
+.user-details {
+  grid-column: 1 / 2;
+}
+
+.user-section {
+  height: 90vh;
+  width: 90%;
+  background-color: #9CA986;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  margin-bottom: 30px;
-  font-size: 2.5rem; /* Larger font size for emphasis */
-  font-weight: 700; /* Bold header */
+}
+
+.user-section img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-section h2 {
+  margin: 10px 0 20px;
+  font-size: 1.5rem;
+}
+
+/* User Actions Styles */
+.user-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-actions button {
+  background-color: #808D7C;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.user-actions button:hover {
+  background-color: #5F6F65;
+  transform: scale(1.05);
+}
+
+/* Post Creation and Viewing Styles */
+.post-creation-and-viewing {
+  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Post Creation Styles */
+.post-creation {
+  background-color: #9CA986;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 /* Form Styles */
 .recipe-form {
   display: flex;
   flex-direction: column;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  background-color: #fff;
-  margin-bottom: 40px;
 }
 
-/* Form Group Styles */
 .form-group {
-  margin-bottom: 20px; /* More space between form elements */
+  margin-bottom: 20px;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 600; /* Slightly bolder label */
-  color: #555;
-}
-
-/* Input Styles */
 input[type="text"],
 textarea,
 input[type="file"] {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid #a4a468;
   border-radius: 8px;
+  background-color: #ffffffa7;
   font-size: 1rem;
 }
 
-textarea {
+.textarea {
   resize: vertical;
   height: 150px;
-  background-color: #fafafa; /* Slightly different background for textarea */
+  background-color: #ffffffa7;
 }
 
 /* Button Styles */
@@ -62,7 +111,7 @@ button {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background-color: #007bff;
+  background-color: #808D7C;
   color: white;
   font-size: 1rem;
   cursor: pointer;
@@ -70,24 +119,22 @@ button {
 }
 
 button:hover {
-  background-color: #0056b3;
-  transform: scale(1.05); /* Slight scaling effect on hover */
+  background-color: #5F6F65;
+  transform: scale(1.05);
 }
 
-/* Posts Container Styles */
-.posts-container {
+/* Post Viewing Styles */
+.post-viewing {
+  background-color: #9CA986;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 20px;
-  background-color: #fff;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Posts Container Header */
-.posts-container h2 {
+.post-viewing h2 {
   margin-bottom: 20px;
-  color: #333;
-  font-size: 2rem; /* Larger font size for the header */
+  font-size: 2rem;
   font-weight: 700;
 }
 
@@ -112,7 +159,7 @@ button:hover {
   height: 50px;
   border-radius: 50%;
   margin-right: 15px;
-  border: 2px solid #ddd; /* Border for profile picture */
+  border: 2px solid #ddd;
 }
 
 .post-user-info {
@@ -122,7 +169,6 @@ button:hover {
 .post-user-info h3 {
   margin: 0;
   font-size: 1.2rem;
-  color: #333;
 }
 
 .post-user-info p {
@@ -131,14 +177,12 @@ button:hover {
   font-size: 0.9rem;
 }
 
-/* Post Content Styles */
 .post-content {
   margin-bottom: 15px;
 }
 
 .post-content h4 {
   margin: 0 0 10px 0;
-  color: #444;
 }
 
 .post-image {
@@ -149,7 +193,6 @@ button:hover {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* Post Actions Styles */
 .post-actions {
   display: flex;
   justify-content: space-between;
@@ -169,5 +212,29 @@ button:hover {
 .like-button:hover,
 .comment-button:hover {
   color: #0056b3;
-  transform: scale(1.05); /* Slight scaling effect on hover */
+  transform: scale(1.05);
+}
+
+/* Recommendations and Search Styles */
+.recommendations-and-search {
+  grid-column: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recommendations {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.search input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
 }

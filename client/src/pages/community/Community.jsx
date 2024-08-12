@@ -1,21 +1,21 @@
-import React, { useState, useEffect, startTransition } from 'react'
+import { useState, useEffect, startTransition } from 'react'
 import usePrivateApi from '../../../hooks/usePrivateApi'
-import './community.css' // Make sure to create or update this CSS file for styling
+import './community.css'
+import { useUserData } from '../../../hooks/useUserData'
 
 const Community = () => {
-  // Combine state into a single object
   const [dishData, setDishData] = useState({})
   const [posts, setPosts] = useState([])
   const privateAxios = usePrivateApi()
-  const [ base64Image, setBase64Image ] = useState('')
+  const [base64Image, setBase64Image] = useState('')
   const userID = localStorage.getItem('userID')
+  const { user } = useUserData()
 
-  // Handle input changes for dish data
   const handleFieldChange = (e) => {
     const { name, value } = e.target
     setDishData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }))
   }
 
@@ -27,12 +27,11 @@ const Community = () => {
       reader.readAsDataURL(file)
 
       reader.onload = () => {
-        console.log(reader.result)
         setBase64Image(reader.result)
       }
 
       reader.onerror = (error) => {
-        console.error("Error reading file:", error)
+        console.error('Error reading file:', error)
       }
     }
   }
@@ -41,30 +40,27 @@ const Community = () => {
   const handleImageChange = (e) => {
     setDishData((prevData) => ({
       ...prevData,
-      image: e.target.files[0]
+      image: e.target.files[0],
     }))
   }
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    // Implement form submission logic, e.g., send data to server
-    console.log('Dish Data:', dishData)
-    // You can use FormData to handle file uploads
-    const formData = new FormData()
+    e.preventDefault();
+    const formData = new FormData();
     formData.append('dishName', dishData.dishName)
     formData.append('ingredients', dishData.ingredients)
     if (base64Image) {
       formData.append('dishImage', base64Image)
     }
     try {
-      console.log(userID)
       const response = await privateAxios.post(`/posts/create-post/${userID}`, formData)
 
       if (response.status === 201) {
-        alert(response.data.message)
+        alert(response.data.message);
         startTransition(() => {
           setDishData({})
+          setBase64Image('')
         })
       }
     } catch (error) {
@@ -77,8 +73,7 @@ const Community = () => {
     const fetchPosts = async () => {
       try {
         const response = await privateAxios('/posts/global-posts', { params: { page: 1, limit: 10 } })
-        console.log(response.data.globalPosts)
-        setPosts(response.data.globalPosts)
+        setPosts(response.data.globalPosts);
       } catch (error) {
         console.error('Error fetching posts:', error)
       }
@@ -98,74 +93,103 @@ const Community = () => {
     console.log('Comment on post with ID:', postId)
   }
 
+  const navigateToProfile = () => {
+    // Implement navigation to the user's profile
+    console.log('Navigate to profile')
+  }
+
   return (
     <div className="community-container">
-      <h1>Share Your Recipe</h1>
-      <form onSubmit={handleSubmit} className="recipe-form">
-        <div className="form-group">
-          <label htmlFor="dishName">Dish Name:</label>
-          <input
-            type="text"
-            id="dishName"
-            name="dishName"
-            value={dishData.dishName}
-            onChange={handleFieldChange}
-            placeholder="Enter the name of the dish"
-            required
-          />
+      <div className="user-details">
+        <div className="user-section">
+          <img src={user.profilePic} alt="user-pic" />
+          <h2>{user.username}</h2>
+          <div className="user-actions">
+            <button onClick={() => console.log('Show Likes')}>Likes</button>
+            <button onClick={() => console.log('Show Saved')}>Saved</button>
+            <button onClick={() => console.log('Show Notifications')}>Notifications</button>
+            <button onClick={navigateToProfile}>Go to Profile</button>
+          </div>
         </div>
-        <div className="form-group">
-          <label htmlFor="ingredients">Ingredients:</label>
-          <textarea
-            id="ingredients"
-            name="ingredients"
-            value={dishData.ingredients}
-            onChange={handleFieldChange}
-            placeholder="Enter the ingredients, separated by commas"
-            required
-          />
+      </div>
+      <div className="post-creation-and-viewing">
+        <div className="post-creation">
+          <h1>Share Your Recipe</h1>
+          <form onSubmit={handleSubmit} className="recipe-form">
+            <div className="form-group">
+              <label htmlFor="dishName">Dish Name:</label>
+              <input
+                type="text"
+                id="dishName"
+                name="dishName"
+                value={dishData.dishName}
+                onChange={handleFieldChange}
+                placeholder="Enter the name of the dish"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="ingredients">Ingredients:</label>
+              <textarea
+                id="ingredients"
+                name="ingredients"
+                value={dishData.ingredients}
+                onChange={handleFieldChange}
+                placeholder="Enter the ingredients, separated by commas"
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="image">Dish Image:</label>
+              <input
+                type="file"
+                accept=".jpeg, .jpg, .png"
+                onChange={convertToBase64}
+              />
+            </div>
+            <button type="submit">Submit Recipe</button>
+          </form>
         </div>
-        <div className="form-group">
-          <label htmlFor="image">Dish Image:</label>
-          <input
-            type="file"
-            accept=".jpeg, .jpg, .png"
-            onChange={convertToBase64}
-          />
-        </div>
-        <button type="submit">Submit Recipe</button>
-      </form>
-
-      <div className="posts-container">
-        <h2>Community Posts</h2>
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <div key={post._id} className="post">
-              <div className="post-header">
-                <img src={post.userProfilePic} alt={post.username} className="user-profile-pic" />
-                <div className="post-user-info">
-                  <h3>{post.username}</h3>
-                  <p>{new Date(post.datePosted).toLocaleDateString()}</p>
+        <div className="post-viewing">
+          <h2>Community Posts</h2>
+          {posts.length > 0 ? (
+            posts.map((post) => (
+              <div key={post._id} className="post">
+                <div className="post-header">
+                  <img src={post.userProfilePic} alt={post.username} className="user-profile-pic" />
+                  <div className="post-user-info">
+                    <h3>{post.username}</h3>
+                    <p>{new Date(post.datePosted).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <div className="post-content">
+                  <h4>Dish Name: {post.dishName}</h4>
+                  <p>Ingredients: {post.ingredients}</p>
+                  {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
+                </div>
+                <div className="post-actions">
+                  <button onClick={() => handleLike(post._id)} className="like-button">
+                    ❤️ {post.hearts}
+                  </button>
+                  <button onClick={() => handleComment(post._id)} className="comment-button">
+                    💬 Comment
+                  </button>
                 </div>
               </div>
-              <div className="post-content">
-                <h4>Dish Name: {post.dishName}</h4>
-                <p>Ingredients: {post.ingredients}</p>
-                {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
-              </div>
-              <div className="post-actions">
-                <button onClick={() => handleLike(post._id)} className="like-button">
-                  ❤️ {post.hearts}
-                </button>
-                <button onClick={() => handleComment(post._id)} className="comment-button">
-                  💬 Comment
-                </button>
-              </div>
-            </div>
-          ))
-        ) : (
-          <p>No posts yet. Be the first to share a recipe!</p>
-        )}
+            ))
+          ) : (
+            <p>No posts yet. Be the first to share a recipe!</p>
+          )}
+        </div>
+      </div>
+      <div className="recommendations-and-search">
+        <div className="search">
+          <input type="text" placeholder="Search for accounts..." />
+        </div>
+        <div className="recommendations">
+          <h2>Follow Recommendations</h2>
+          {/* Recommendations content */}
+        </div>
       </div>
     </div>
   )
