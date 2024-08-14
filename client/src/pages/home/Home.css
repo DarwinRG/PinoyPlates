@@ -3,7 +3,7 @@
   background-image: url('home-bg.jpg');
   background-size: cover;
   background-position: center;
-  height: 90vh;
+  height: 100vh;
   font-family: "Merriweather Sans", sans-serif;
   overflow: hidden;
 }
@@ -76,11 +76,11 @@ h1 {
 }
 
 .search-btn {
-  width: 150px;
+  padding: 0px 16px;
+  height: 50px;
   background-color: #FF5733; /* Bright and engaging color */
   color: white; /* White text */
-  padding: 8px 10px; /* Larger padding for emphasis */
-  font-size: 1rem; /* Slightly larger font size */
+  font-size: 1.1rem; /* Slightly larger font size */
   font-weight: bold; /* Bold text */
   border: none; /* Remove default border */
   border-radius: 5px; /* Rounded corners */
@@ -106,71 +106,100 @@ h1 {
 
 /* recipe-recommendations.css */
 
+/* General styles for the recipe container */
+/* recipe-recommendations.css */
+
+/* General styles for the recipe container */
 .recipe-container {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   padding: 20px;
-  justify-content: center;
+  background-color: #fafafa; /* Soft background color */
+  max-width: 1200px;
+  margin: auto;
 }
 
+/* Individual recipe card */
 .recipe {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  height: 650px;
-  width: 600px;
-  text-align: center;
+  width: calc(33% - 20px); /* Adjust based on the number of columns */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  position: relative;
+  cursor: pointer;
 }
 
+/* Hover effect for recipe card */
 .recipe:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  transform: scale(1.05);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
+/* Recipe image */
 .recipe img {
   width: 100%;
-  height: 300px;
+  height: 200px;
   object-fit: cover;
-  border-bottom: 1px solid #eee;
+  border-bottom: 2px solid #eaeaea; /* Light border for separation */
+  transition: opacity 0.3s ease;
 }
 
+/* Hover effect for image */
+.recipe:hover img {
+  opacity: 0.9;
+}
+
+/* Recipe title */
 .recipe h2 {
-  font-size: 1.5rem;
-  color: #000;
-  margin: 15px 0;
+  font-size: 1.6rem;
+  margin: 15px;
+  color: #333;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Subtle text shadow */
 }
 
+/* Recipe content */
 .recipe p {
-  font-size: 1.3rem;
-  color: #393939;
-  margin: 0 15px 15px;
+  margin: 10px 15px;
+  color: #555;
+  line-height: 1.6;
+  font-size: 1rem;
 }
 
+/* Ingredients and instructions styling */
+.recipe .ingredients,
+.recipe .instructions {
+  font-weight: 600;
+  color: #444;
+}
+
+/* Missing and unnecessary ingredients */
 .recipe .missing-ingredients,
 .recipe .unnecessary-ingredients {
   font-weight: bold;
-  color: #ff6f61;
-  margin-top: 10px;
+  padding: 10px 15px;
+  background: linear-gradient(135deg, #f8d7da, #f5c6cb); /* Gradient background */
+  border-radius: 5px;
+  color: #721c24;
+  margin: 10px 15px;
 }
 
 .recipe .unnecessary-ingredients {
-  color: #d9534f;
+  background: linear-gradient(135deg, #fff3cd, #ffeeba); /* Gradient background */
+  color: #856404;
 }
 
+/* Responsive design for smaller screens */
 @media (max-width: 768px) {
-  .recipe-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
   .recipe {
-    width: 90%;
+    width: calc(50% - 20px); /* Two columns on tablets */
   }
 }
 
+@media (max-width: 480px) {
+  .recipe {
+    width: 100%; /* Single column on mobile */
+  }
+}

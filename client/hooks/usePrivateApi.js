@@ -8,7 +8,6 @@ const usePrivateApi = () => {
   const { auth } = useAuth()
 
   useEffect(() => {
-    console.log(auth.accessToken)
     const requestIntercept = privateAxios.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {

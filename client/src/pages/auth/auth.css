@@ -1,121 +1,172 @@
-.auth-container {
-  font-family: "Merriweather Sans", sans-serif;
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #666;
+  --main-color: #323232;
+}
+
+/* Container for the card */
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #e5e5e5;
+  perspective: 1000px;
+  position: relative;
+}
+
+/* Switch card */
+.switch {
+  position: absolute; /* Position it above the forms */
   display: flex;
   flex-direction: row;
-  margin: 0;
-  padding: 0;
-  color: rgb(33, 125, 33);
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  height: 40px;
+  background: var(--bg-color);
+  border: 2px solid var(--main-color);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  top: 10%; /* Adjust this value to move the switch up */
+  z-index: 2; /* Ensure it stays above the forms */
 }
 
-/* Login Style */
-.auth-form {
+.switch-status {
+  flex: 1;
+  text-align: center;
+  line-height: 40px;
+  color: var(--font-color);
+  font-weight: 600;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.switch-status.active {
+  color: var(--input-focus);
+}
+
+.slider {
+  position: absolute;
+  border-radius: 20px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: var(--bg-color);
+  transition: transform 0.3s ease-in-out;
+  z-index: 0;
+}
+
+.slider.right {
+  transform: translateX(100%);
+}
+
+.flip-card__inner {
+  width: 300px;
+  height: 350px;
+  position: relative;
+  background-color: transparent;
+  perspective: 1000px;
+  text-align: center;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  margin-top: 60px; /* Ensure it doesn’t overlap with the switch */
+}
+
+.flip-card__front, .flip-card__back {
+  padding: 20px;
+  position: absolute;
   display: flex;
   flex-direction: column;
   justify-content: center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  background: var(--bg-color);
+  gap: 20px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  box-shadow: 4px 4px var(--main-color);
+}
+
+.flip-card__back {
+  transform: rotateY(180deg);
+}
+
+.flip-card__form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 20px;
-  height: 100vh;
-  width: 580px;
-  background-color: #fff;
 }
 
-.login-form {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.login-form h1 {
-  font-size: 3rem;
+.title {
+  margin: 20px 0;
+  font-size: 25px;
   font-weight: 900;
-  margin-bottom: 50px;
-  color: #45a049;
-  text-align: center;
+  color: var(--main-color);
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  width: 350px;
-}
-
-form input {
-  font-size: 1.1rem;
-  padding: 12px 16px;
-  border-radius: 10px;
-  border: none;
-  background-color: rgb(177, 177, 177);
-  margin-bottom: 15px;
-}
-
-form label {
+.flip-card__input {
+  width: 250px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 15px;
   font-weight: 600;
-  font-size: 1.2rem;
-  margin-bottom: 8px;
+  color: var(--font-color);
+  padding: 5px 10px;
+  outline: none;
 }
 
-.login-btn {
-  font-size: 1.2rem;
-  padding: 8px 12px;
-  border: none;
-  background-color: rgb(33, 125, 33);
-  color: #ffff;
-  font-family: "Merriweather Sans", sans-serif;
+.flip-card__input::placeholder {
+  color: var(--font-color-sub);
+  opacity: 0.8;
 }
 
-.auth-bg {
-  height: 100vh;
-  width: 100%;
+.flip-card__input:focus {
+  border-color: var(--input-focus);
 }
 
-.auth-image {
-  height: 100%;
-  width: 100%;
-}
-
-/* Verify Email CSS */
-.verify-email-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  background-color: #f7f7f7;
-}
-
-.verify-email-container h2 {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-.verify-email-container form {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.verify-email-container input {
-  width: 300px;
-  padding: 10px;
-  margin-bottom: 20px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 16px;
-}
-
-.verify-email-container button {
-  padding: 10px 20px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+.flip-card__btn {
+  width: 120px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--font-color);
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: box-shadow 0.3s, transform 0.3s;
 }
 
-.verify-email-container button:hover {
-  background-color: #45a049;
+.flip-card__btn:hover {
+  background-color: var(--input-focus);
 }
+
+.flip-card__btn:active {
+  box-shadow: 0 0 var(--main-color);
+  transform: translate(3px, 3px);
+}
+
+.forgot-password {
+  color: var(--input-focus);
+  text-decoration: none;
+  margin-top: 10px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+

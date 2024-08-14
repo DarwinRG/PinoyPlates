@@ -1,0 +1,249 @@
+.post-creation-and-viewing {
+  font-family: "Merriweather Sans", sans-serif;
+}
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  background-color: #f1f1f1;
+  border-radius: 10px;
+}
+
+.profile-avatar {
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-username {
+  font-size: 1.5rem;
+  margin: 0;
+}
+
+.profile-date-joined,
+.profile-stats {
+  font-size: 1rem;
+  margin: 5px 0;
+}
+
+.profile-stats span {
+  display: block;
+  margin: 5px 0;
+  font-weight: 600;
+}
+
+.follow-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.follow-button.follow {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.follow-button.unfollow {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.close-button {
+  margin-bottom: 20px;
+  background-color: #f1f1f1;
+  border: 1px solid #ddd;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+.post-creation {
+  margin-bottom: 20px;
+}
+
+.share-recipe {
+  font-size: 1.5rem;
+  text-align: center;
+  color: #000;
+}
+
+.recipe-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%; /* Ensure full width of the container */
+  max-width: 100%; /* Prevents overflow */
+  padding: 10px;
+  border: 1px solid #646464;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.submit-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.view-toggle {
+  margin: 20px 0; /* Vertical margin for spacing */
+  display: flex;
+  justify-content: center; /* Center buttons horizontally */
+  align-items: center; /* Center items vertically if needed */
+  gap: 10px; /* Space between buttons */
+  width: 100%; /* Ensure the container takes full width */
+}
+
+.view-button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px; /* Rounded corners */
+  background-color: #007bff; /* Primary color */
+  color: #fff;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase; /* Capitalize button text */
+  transition: background-color 0.3s, box-shadow 0.3s; /* Smooth transition for hover effect */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+.view-button.active {
+  background-color: #0056b3; /* Darker shade when active */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Slightly darker shadow when active */
+}
+
+.view-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+}
+
+.posts {
+  margin-top: 20px;
+}
+
+.post {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.post-header {
+  display: flex;
+  align-items: center;
+}
+
+.user-profile-pic {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  margin-right: 15px;
+}
+
+.post-content {
+  margin: 10px 0;
+}
+
+.post-content p {
+  font-weight: bold;
+  color: #00000094;
+}
+
+.bold-text {
+  font-weight: 900;
+  color: #000;
+}
+
+.post-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-actions {
+  margin-top: 10px;
+}
+
+.like-button,
+.comment-button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.like-button {
+  background-color: #f1f1f1;
+}
+
+.comment-button {
+  background-color: #f1f1f1;
+}
+
+.user-posts-title {
+  color: #f1f1f1;
+}
+
+/* Recipe Share Container */
+.recipe-share-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+/* Input Styling */
+.recipe-input {
+  width: 80%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  box-sizing: border-box; /* Ensures padding is included in the element's total width and height */
+}
+
+/* Button Styling */
+.share-button {
+  background-color: #1a1a1a; /* Green background */
+  color: white; /* White text */
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+/* Button Hover Effect */
+.share-button:hover {
+  background-color: #373837; /* Darker green on hover */
+}

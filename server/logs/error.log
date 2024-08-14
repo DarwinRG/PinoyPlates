@@ -6,3 +6,29 @@
 2024-08-10 09:32:42 [ERROR]: Error unliking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c5523472" (type string) at path "_id" for model "Posts"
 2024-08-10 09:48:12 [ERROR]: Error unliking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c552347" (type string) at path "_id" for model "Posts"
 2024-08-10 10:28:19 [ERROR]: Error liking post: Cast to ObjectId failed for value "66b6b7ba4be0b00c552347" (type string) at path "_id" for model "Posts"
+2024-08-11 09:27:45 [ERROR]: Error creating post: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "User"
+2024-08-11 09:29:31 [ERROR]: Error creating post: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "User"
+2024-08-11 09:30:21 [ERROR]: Error creating post: Cast to ObjectId failed for value "undefined" (type string) at path "_id" for model "User"
+2024-08-11 09:49:02 [ERROR]: Error creating post: base64Image is not defined
+2024-08-11 09:53:28 [ERROR]: Error fetching global posts: currentPage is not defined
+2024-08-11 09:54:04 [ERROR]: Error fetching global posts: currentPage is not defined
+2024-08-11 13:46:15 [ERROR]: Error getting recommendations:
+2024-08-11 13:47:00 [ERROR]: Error getting recommendations: userIngredients.every is not a function
+2024-08-11 13:48:09 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:48:29 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:48:59 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:49:13 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:49:51 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:49:58 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:50:12 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:50:14 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:50:58 [ERROR]: Error getting recommendations: ingredient is not defined
+2024-08-11 13:52:00 [ERROR]: Error getting recommendations: userIngredients.every is not a function
+2024-08-11 14:48:01 [ERROR]: Error creating post: Cannot read properties of undefined (reading 'match')
+2024-08-13 08:16:15 [ERROR]: Error fetching community posts: posts is not defined
+2024-08-13 08:16:19 [ERROR]: Error fetching community posts: posts is not defined
+2024-08-13 08:17:33 [ERROR]: Error fetching following posts: followingPosts is not defined
+2024-08-13 08:17:34 [ERROR]: Error fetching following posts: followingPosts is not defined
+2024-08-13 08:53:57 [ERROR]: Error getting user data: Cannot populate path `posts.comments.user` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2024-08-13 08:53:57 [ERROR]: Error getting user data: Cannot populate path `posts.comments.user` because it is not in your schema. Set the `strictPopulate` option to false to override.
+2024-08-14 07:01:39 [ERROR]: Error changing user username User.findOneById is not a function

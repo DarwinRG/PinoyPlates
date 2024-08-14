@@ -1,5 +1,6 @@
 const Posts = require('../models/posts')
 const User = require('../models/user')
+const Notification = require('../models/notifications')
 const logger = require('../logger/logger')
 const mongoose = require('mongoose')
 const sharp = require('sharp')
@@ -9,7 +10,7 @@ const createPost = async (req, res) => {
   const { userID } = req.params
 
   try {
-
+    // Validate required fields
     if (!dishName || !ingredients) {
       return res.status(400).json({ error: 'Dish name and Ingredients are required' })
     }
@@ -36,8 +37,8 @@ const createPost = async (req, res) => {
       const resizedImage = await sharp(imageBuffer)
         .resize({
           fit: 'cover',
-          width: 200,
-          height: 200,
+          width: 300,
+          height: 300,
           withoutEnlargement: true,
         })
         .toFormat(imageFormat)
@@ -51,22 +52,27 @@ const createPost = async (req, res) => {
       return res.status(400).json({ error: 'User ID is required' })
     }
 
+    // Find the user
     const user = await User.findById(userID)
-
     if (!user) {
       return res.status(400).json({ error: 'User not found' })
     }
 
+    // Create a new post
     const newPost = new Posts({
       dishName,
       ingredients,
-      dishImage: resizedImageBase64, // Either resized image or an empty string
+      dishImage: resizedImageBase64,
       postOwner: userID,
       createdAt: new Date(),
     })
 
     // Save the post to the database
-    await newPost.save()
+    const savedPost = await newPost.save()
+
+    // Add postID to user's posts list
+    user.posts.push(savedPost._id)
+    await user.save()
 
     logger.info('Post created successfully by:', userID)
 
@@ -114,12 +120,26 @@ const likePost = async (req, res) => {
       post.save({ session }),
     ])
 
+    // Notify the post owner
+    const postOwner = await User.findById(post.postOwner).session(session)
+    if (postOwner) {
+      const notification = new Notification({
+        userId: user._id, // User who triggered the like action
+        message: `${user.username} liked your post.`,
+        type: 'post-liked'
+      })
+
+      await notification.save({ session })
+      postOwner.notifications.push(notification._id)
+      await postOwner.save({ session })
+    }
+
     await session.commitTransaction()
     session.endSession()
 
-    logger.info(`User ${user._id} has liked post ${post._id} succesfully`)
+    logger.info(`User ${user._id} has liked post ${post._id} successfully`)
 
-    res.status(200).json({ message: 'Post liked successfully' })
+    res.status(200).json({ message: 'Post liked successfully', hearts: post.hearts })
   } catch (err) {
     await session.abortTransaction()
     session.endSession()
@@ -170,7 +190,7 @@ const unlikePost = async (req, res) => {
 
     logger.info(`User ${user._id} has unliked post ${post._id} succesfully`)
 
-    res.status(200).json({ message: 'Post unliked successfully' })
+    res.status(200).json({ message: 'Post unliked successfully', hearts: post.hearts })
   } catch (err) {
     await session.abortTransaction()
     session.endSession()
@@ -272,8 +292,8 @@ const getFollowingPosts = async (req, res) => {
     const followingIDs = user.following.map(follow => follow._id)
 
     // Fetch posts from the users that the current user is following with pagination
-    const followingPosts = await Posts.aggregate([
-      { $match: { postOwner: { $in: followingIDs } } },
+    const posts = await Posts.aggregate([
+      { $match: { status: 'accepted', postOwner: { $in: followingIDs } } },
       { $sort: { datePosted: -1 } },
       { $skip: (pageNumber - 1) * limitNumber },
       { $limit: limitNumber },
@@ -309,12 +329,12 @@ const getFollowingPosts = async (req, res) => {
     // Fetch the total count of posts to calculate the total number of pages
     const totalPosts = await Posts.countDocuments({ postOwner: { $in: followingIDs } })
 
-    if (followingPosts.length === 0) {
+    if (posts.length === 0) {
       return res.status(404).json({ message: 'No posts found from following users' })
     }
 
     res.status(200).json({
-      followingPosts,
+      posts,
       totalPosts,
       totalPages: Math.ceil(totalPosts / limitNumber),
       currentPage: pageNumber
@@ -326,10 +346,9 @@ const getFollowingPosts = async (req, res) => {
 }
 
 const getCommunityPosts = async (req, res) => {
-  const { page = 1, limit = 10 } = req.query // Default to page 1 and limit 10 if not provided
+  const { page = 1, limit = 10 } = req.query
 
   try {
-    // Convert page and limit to integers
     const pageNumber = parseInt(page, 10)
     const limitNumber = parseInt(limit, 10)
 
@@ -337,26 +356,27 @@ const getCommunityPosts = async (req, res) => {
       return res.status(400).json({ error: 'Invalid pagination parameters' })
     }
 
-    // Get the current date and the date 7 days ago for community posts
     const now = new Date();
     const past7Days = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
-    // Fetch community posts with random sampling
-    const communityPosts = await Posts.aggregate([
+    // Calculate the number of posts to skip
+    const skip = (pageNumber - 1) * limitNumber
+
+    // Aggregate query with pagination
+    const posts = await Posts.aggregate([
       { $match: { status: 'accepted', datePosted: { $gte: past7Days } } },
-      { $sample: { size: limitNumber } }, // Randomly sample the posts
-      // Lookup user details from Users collection
+      { $sort: { datePosted: -1 } }, // Sort by datePosted in descending order
+      { $skip: skip },               // Skip the appropriate number of posts
+      { $limit: limitNumber },       // Limit the number of posts returned
       {
         $lookup: {
-          from: 'users', // The name of the collection for user data
-          localField: 'postOwner', // The field in the Posts collection
-          foreignField: '_id', // The field in the Users collection
-          as: 'userDetails' // The alias for the joined data
+          from: 'users',
+          localField: 'postOwner',
+          foreignField: '_id',
+          as: 'userDetails'
         }
       },
-      // Unwind the userDetails array to get a single object for each post
       { $unwind: '$userDetails' },
-      // Project the desired fields
       {
         $project: {
           _id: 1,
@@ -373,11 +393,11 @@ const getCommunityPosts = async (req, res) => {
       }
     ])
 
-    // Fetch the total count of posts to calculate the total number of pages
+    // Calculate the total number of posts
     const totalPosts = await Posts.countDocuments({ datePosted: { $gte: past7Days } })
 
     res.status(200).json({
-      communityPosts,
+      posts,
       totalPosts,
       totalPages: Math.ceil(totalPosts / limitNumber),
       currentPage: pageNumber
@@ -400,21 +420,38 @@ const fetchPendingPosts = async (req, res) => {
       return res.status(400).json({ error: 'Invalid pagination parameters' })
     }
 
-    // Fetch pending posts with pagination
+    // Fetch pending posts with pagination, populate postOwner and comments
     const pendingPosts = await Posts.find({ status: 'pending' })
       .skip((pageNumber - 1) * limitNumber)
       .limit(limitNumber)
-      .sort({ createdAt: -1 }) // Sort by creation date, newest first
+      .sort({ datePosted: -1 }) // Sort by datePosted, newest first
+      .populate({
+        path: 'postOwner',
+        select: 'username profilePic'
+      })
+      .populate({
+        path: 'comments.author',
+        select: 'username profilePic'
+      })
 
     // Fetch the total count of pending posts to calculate the total number of pages
     const totalPosts = await Posts.countDocuments({ status: 'pending' })
 
-    if (pendingPosts.length === 0) {
-      return res.status(404).json({ message: 'No pending posts found' })
-    }
-
     res.status(200).json({
-      pendingPosts,
+      pendingPosts: pendingPosts.map(post => ({
+        ...post.toObject(),
+        comments: post.comments.map(comment => ({
+          ...comment.toObject(),
+          author: {
+            username: comment.author.username,
+            profilePic: comment.author.profilePic
+          }
+        })),
+        postOwner: {
+          username: post.postOwner.username,
+          profilePic: post.postOwner.profilePic
+        }
+      })),
       totalPosts,
       totalPages: Math.ceil(totalPosts / limitNumber),
       currentPage: pageNumber
@@ -437,6 +474,23 @@ const acceptPendingPost = async (req, res) => {
 
     if (!post) {
       return res.status(400).json({ error: 'Post is not found'})
+    }
+
+    // Get the post owner
+    const postOwner = await User.findById(post.postOwner) // Assuming post.userId holds the owner's ID
+
+    if (postOwner) {
+      // Create notification
+      const notification = await Notification.create({
+        userId: postOwner._id,
+        message: `Your post titled "${post.dishName}" has been accepted by the moderator.`,
+        type: 'post-accepted'
+      })
+
+      // Add the notification to the user's notifications list
+      await User.findByIdAndUpdate(postOwner._id, {
+        $push: { notifications: notification._id }
+      })
     }
 
     await Posts.findOneAndUpdate({ _id: postID}, { status : 'accepted' }, { new: true})
@@ -463,6 +517,23 @@ const rejectPendingPost = async (req, res) => {
     }
 
     await Posts.findOneAndUpdate({ _id: postID}, { status : 'rejected' }, { new: true})
+
+     // Get the post owner
+     const postOwner = await User.findById(post.postOwner) // Assuming post.userId holds the owner's ID
+
+     if (postOwner) {
+       // Create notification
+       const notification = await Notification.create({
+         userId: postOwner._id,
+         message: `Your post titled "${post.dishName}" has been rejected by the moderator.`,
+         type: 'post-rejected'
+       })
+ 
+       // Add the notification to the user's notifications list
+       await User.findByIdAndUpdate(postOwner._id, {
+         $push: { notifications: notification._id }
+       })
+      } 
 
     res.status(200).json({ msg: 'Post has been rejected succesfully' })
   } catch(err) {

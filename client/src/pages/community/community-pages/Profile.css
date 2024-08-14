@@ -1,0 +1,153 @@
+/* Profile Container */
+.profile-container {
+  width: 95%;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f8fa; /* Light background color for profile page */
+}
+
+/* Profile Header */
+.profile-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 2px solid #e1e8ed;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 4px solid #1da1f2; /* Border color matching the button */
+  margin-right: 20px;
+}
+
+.profile-info {
+  flex: 1;
+}
+
+.profile-username {
+  font-size: 2rem;
+  margin: 0;
+}
+
+.profile-date-joined {
+  color: #657786;
+}
+
+/* Profile Stats */
+.profile-stats {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.profile-stat {
+  text-align: center;
+}
+
+.stat-title {
+  font-size: 1rem;
+  color: #657786;
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+/* Profile Posts */
+.profile-posts {
+  max-height: 600px; /* Adjust height for scrolling */
+  overflow-y: auto;
+  border-top: 2px solid #e1e8ed;
+  padding-top: 20px;
+}
+
+.profile-post {
+  background: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.post-title {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.post-date {
+  color: #657786;
+}
+
+.post-ingredients {
+  margin-bottom: 10px;
+}
+
+.post-image {
+  max-width: 100%;
+  border-radius: 8px;
+}
+
+.post-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.post-likes {
+  font-size: 1rem;
+}
+
+.comments-toggle-button {
+  background-color: #1da1f2; /* Twitter blue color */
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  padding: 5px 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: background-color 0.3s;
+}
+
+.comments-toggle-button:hover {
+  background-color: #0d95e8; /* Slightly darker blue on hover */
+}
+
+.comments-list {
+  margin-top: 10px;
+}
+
+.comment {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.comment-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+.comment-text {
+  background: #f5f8fa;
+  border-radius: 8px;
+  padding: 10px;
+  max-width: 90%;
+}
+
+.no-comments, .no-posts {
+  color: #657786;
+  font-style: italic;
+}

@@ -6,9 +6,9 @@
   gap: 20px;
   padding: 20px;
   font-family: 'Roboto', sans-serif;
-  background-color: #C9DABF;
-  height: 100vh;
-  box-sizing: border-box;
+  background-color: #121212;
+  height: 100%;
+  font-family:  "Merriweather Sans", sans-serif;
 }
 
 /* User Details Styles */
@@ -17,9 +17,9 @@
 }
 
 .user-section {
-  height: 90vh;
-  width: 90%;
-  background-color: #9CA986;
+  height: 100vh;
+  width: 95%;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 20px;
@@ -39,6 +39,18 @@
   font-size: 1.5rem;
 }
 
+.follow-count {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.follow-count h3 {
+  font-size: 0.9rem;
+}
+
 /* User Actions Styles */
 .user-actions {
   display: flex;
@@ -47,7 +59,7 @@
 }
 
 .user-actions button {
-  background-color: #808D7C;
+  background-color: #0e0e10;
   color: white;
   border: none;
   border-radius: 8px;
@@ -58,52 +70,27 @@
 }
 
 .user-actions button:hover {
-  background-color: #5F6F65;
+  background-color: #1f1e1e;
   transform: scale(1.05);
 }
 
 /* Post Creation and Viewing Styles */
-.post-creation-and-viewing {
+.content-viewing {
   grid-column: 2 / 3;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow-y: auto;
+  height: 100vh;
 }
 
 /* Post Creation Styles */
 .post-creation {
-  background-color: #9CA986;
+  background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Form Styles */
-.recipe-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group {
-  margin-bottom: 20px;
-}
-
-input[type="text"],
-textarea,
-input[type="file"] {
-  width: 100%;
-  padding: 12px;
-  border: 1px solid #a4a468;
-  border-radius: 8px;
-  background-color: #ffffffa7;
-  font-size: 1rem;
-}
-
-.textarea {
-  resize: vertical;
-  height: 150px;
-  background-color: #ffffffa7;
 }
 
 /* Button Styles */
@@ -111,7 +98,7 @@ button {
   padding: 12px 20px;
   border: none;
   border-radius: 8px;
-  background-color: #808D7C;
+  background-color: #000;
   color: white;
   font-size: 1rem;
   cursor: pointer;
@@ -119,7 +106,7 @@ button {
 }
 
 button:hover {
-  background-color: #5F6F65;
+  background-color: #272827;
   transform: scale(1.05);
 }
 
@@ -238,3 +225,345 @@ button:hover {
   border-radius: 8px;
   font-size: 1rem;
 }
+
+/* Pending Posts View Styles */
+.pending-posts-view {
+  background-color: #9CA986;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pending-posts-view h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+/* Individual Pending Post Styles */
+.pending-post {
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  padding: 15px;
+  margin-bottom: 15px;
+  background-color: #fafafa;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pending-post-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pending-post-user-profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 10px;
+  border: 2px solid #ddd;
+}
+
+.pending-post-user-info {
+  flex: 1;
+}
+
+.pending-post-user-info h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.pending-post-user-info p {
+  margin: 0;
+  color: #777;
+  font-size: 0.8rem;
+}
+
+.pending-post-content {
+  margin-bottom: 10px;
+}
+
+.pending-post-content h4 {
+  margin: 0 0 5px 0;
+}
+
+.pending-post-image {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.pending-post-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.approve-button,
+.reject-button {
+  background-color: #808D7C;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.approve-button:hover {
+  background-color: #5F6F65;
+  transform: scale(1.05);
+}
+
+.reject-button {
+  background-color: #E57373;
+}
+
+.reject-button:hover {
+  background-color: #C62828;
+  transform: scale(1.05);
+}
+
+.notifications-button {
+  position: relative;
+}
+
+.notification-dot {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+  border-radius: 50%;
+}
+
+.has-unread .notification-dot {
+  display: block;
+}
+
+/* Styles for Searched User Profile */
+.searched-user-profile {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  margin: auto;
+  height: 100vh;
+  width: 95%; /* Increased width */
+  border-top: 5px solid #1da1f2; /* Top border with Twitter blue color */
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #e1e8ed; /* Light border for separation */
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+
+.profile-header .profile-image {
+  width: 150px; /* Larger profile image */
+  height: 150px;
+  border-radius: 50%;
+  margin-right: 20px;
+  object-fit: cover;
+  border: 4px solid #fff; /* White border to separate from background */
+}
+
+.profile-header .profile-info {
+  flex: 1;
+}
+
+.profile-header h2 {
+  font-size: 32px; /* Larger font size for username */
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.profile-header p {
+  font-size: 18px; /* Slightly larger font size */
+  color: #657786; /* Gray color for secondary text */
+  margin: 5px 0;
+}
+
+.profile-header .profile-stats {
+  display: flex;
+  gap: 30px; /* Increased gap between stats */
+  border-top: 1px solid #e1e8ed; /* Added border for separation */
+  padding-top: 10px;
+}
+
+.profile-stats div {
+  text-align: center;
+}
+
+.profile-stats .stat-value {
+  font-size: 22px; /* Larger font size for stat values */
+  font-weight: 700;
+  color: #333;
+}
+
+.profile-stats .stat-title {
+  font-size: 16px;
+  color: #657786;
+}
+
+.posts-section {
+  margin-top: 20px;
+  max-height: 500px; /* Set a maximum height */
+  overflow-y: auto; /* Enable vertical scrolling */
+}
+
+.posts-section h3 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.posts-section ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.posts-section li {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 15px;
+  border: 1px solid #e1e8ed;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.posts-section li p {
+  font-size: 16px;
+  color: #333;
+  margin: 5px 0;
+}
+
+.posts-section .post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.posts-section .post-header .dish-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+}
+
+.posts-section .post-header .post-date {
+  font-size: 14px;
+  color: #657786;
+}
+
+.posts-section .post-content {
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.posts-section .post-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.posts-section .post-footer {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #657786;
+}
+
+.posts-section .post-footer .likes {
+  color: #1da1f2;
+}
+
+.posts-section .post-footer .comments {
+  color: #657786;
+}
+
+/* Styles for Follow Button */
+.profile-info .follow-button {
+  background-color: #1da1f2; /* Twitter blue color */
+  color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background-color 0.3s;
+}
+
+.profile-info .follow-button:hover {
+  background-color: #0d95e8; /* Slightly darker blue on hover */
+}
+
+.profile-info .follow-button:disabled {
+  background-color: #b0bec5; /* Gray color for disabled state */
+  cursor: not-allowed;
+}
+
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  max-width: 90%;
+}
+
+.popup-content h2 {
+  margin-top: 0;
+}
+
+.username-change-form, .password-change-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.username-change-form input, .password-change-form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.username-change-form button, .password-change-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background: #007bff;
+  color: white;
+  cursor: pointer;
+}
+
+.username-change-form button:hover, .password-change-form button:hover {
+  background: #0056b3;
+}
+
+

@@ -17,6 +17,9 @@ const useTokenRefresh = () => {
 
       return newAccessToken
     } catch (refreshError) {
+      if (refreshError.response.status === 403 || 401) {
+        navigate('/auth')
+      }
       console.error("Error refreshing token:", refreshError)
     }
   }

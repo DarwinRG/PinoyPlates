@@ -50,7 +50,17 @@ const UserSchema = mongoose.Schema({
   saved: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Posts'
-  }]
+  }],
+  posts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Posts'
+  }],
+  notifications: [{ 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Notification' 
+  }],
+  resetPasswordToken: { type: String, default: undefined},
+  resetPasswordExpires: { type: Date, default: undefined }
 })
 
 module.exports = mongoose.model('User', UserSchema)

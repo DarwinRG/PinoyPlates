@@ -1,101 +1,120 @@
-import { useState, useEffect, startTransition } from 'react'
+import { useState } from 'react'
 import usePrivateApi from '../../../hooks/usePrivateApi'
-import './community.css'
 import { useUserData } from '../../../hooks/useUserData'
+import { PostCreationAndViewing } from './community-pages/PostCreationAndViewing'
+import { PendingPosts } from './community-pages/PendingPosts'
+import { Profile } from './community-pages/Profile'
+import { Notifications } from './community-pages/Notifications'
+import { Likes } from './community-pages/Likes'
+import './community.css'
 
 const Community = () => {
-  const [dishData, setDishData] = useState({})
-  const [posts, setPosts] = useState([])
-  const privateAxios = usePrivateApi()
-  const [base64Image, setBase64Image] = useState('')
+  const [currentView, setCurrentView] = useState('create/view')
+  const [searchedUser, setSearchedUser] = useState(null)
+  const [searchQuery, setSearchQuery] = useState('')
+  const [isFollowing, setIsFollowing] = useState(false)
+  const [isChangingUsername, setIsChangingUsername] = useState(false)
+  const [isChangingPassword, setIsChangingPassword] = useState(false) // State for password change popup
+  const [oldUsername, setOldUsername] = useState('')
+  const [newUsername, setNewUsername] = useState('')
+  const [passwordData, setPasswordData] = useState({})
   const userID = localStorage.getItem('userID')
-  const { user } = useUserData()
+  const userRole = localStorage.getItem('userRole')
+  const { user, setUser } = useUserData() // Added setUser to update user data
+  const privateAxios = usePrivateApi()
+
+  const handleButtonClick = (view) => {
+    setCurrentView(view)
+    setIsChangingUsername(false)
+    setIsChangingPassword(false) // Hide form when changing view
+  }
+
+  const handleSearch = async (e) => {
+    if (e.key === 'Enter' && searchQuery.trim()) {
+      try {
+        const response = await privateAxios.get(`user/get-user-data/${searchQuery}`)
+        setSearchedUser(response.data.currentUser)
+        setCurrentView('searchedUserProfile')
+        const following = user.following || []
+        setIsFollowing(following.some(follow => follow._id === response.data.currentUser._id))
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+  }
+
+  const handleFollow = async () => {
+    try {
+      if (isFollowing) {
+        await privateAxios.post(`user/unfollow/${searchedUser._id}`)
+        setIsFollowing(false)
+      } else {
+        await privateAxios.post(`user/follow/${searchedUser._id}`)
+        setIsFollowing(true)
+      }
+      const response = await privateAxios.get(`user/get-user-data/${user._id}`)
+      setUser(response.data)
+    } catch (error) {
+      console.error('Error following/unfollowing user:', error)
+    }
+  }
+
+  const handleUsernameChange = async (e) => {
+    e.preventDefault()
+    try {
+      const response = await privateAxios.put(`user/change-username/${userID}`, { username: oldUsername, newUserName: newUsername })
+      if (response.status === 200) {
+        alert(response.data.msg)
+        setUser(prevUser => ({ ...prevUser, username: newUsername }))
+        setOldUsername('')
+        setNewUsername('')
+      }
+      setIsChangingUsername(false)
+    } catch (err) {
+      if (err.response && err.response.data) {
+        alert(err.response.data.error)
+      }
+    }
+  }
 
   const handleFieldChange = (e) => {
     const { name, value } = e.target
-    setDishData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }))
-  }
-
-  const convertToBase64 = (e) => {
-    const file = e.target.files[0]
-
-    if (file) {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-
-      reader.onload = () => {
-        setBase64Image(reader.result)
-      }
-
-      reader.onerror = (error) => {
-        console.error('Error reading file:', error)
-      }
+    let formattedValue = value
+  
+    try {
+      formattedValue = JSON.parse(value)
+    } catch (error) {
+      // Ignore parsing errors
     }
-  }
-
-  // Handle image file change separately
-  const handleImageChange = (e) => {
-    setDishData((prevData) => ({
+  
+    setPasswordData((prevData) => ({
       ...prevData,
-      image: e.target.files[0],
+      [name]: formattedValue,
     }))
   }
 
-  // Handle form submission
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('dishName', dishData.dishName)
-    formData.append('ingredients', dishData.ingredients)
-    if (base64Image) {
-      formData.append('dishImage', base64Image)
+
+  const handlePasswordChange = async (e) => {
+    e.preventDefault()
+    if (passwordData.newPassword !== passwordData.newPasswordConfirmation) {
+      alert("New password and confirmation do not match!")
+      return
     }
     try {
-      const response = await privateAxios.post(`/posts/create-post/${userID}`, formData)
-
-      if (response.status === 201) {
-        alert(response.data.message);
-        startTransition(() => {
-          setDishData({})
-          setBase64Image('')
-        })
+      const response = await privateAxios.put(`auth/change-password/${userID}`, { 
+        currentPassword: passwordData.currentPassword,
+        newPassword: passwordData.newPassword, 
+        newPasswordConfirmation: passwordData.newPasswordConfirmation
+      })
+      if (response.status === 200) {
+        alert(response.data.msg)
       }
-    } catch (error) {
-      console.error('Error submitting recipe:', error)
-    }
-  }
-
-  // Fetch posts on component mount
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await privateAxios('/posts/global-posts', { params: { page: 1, limit: 10 } })
-        setPosts(response.data.globalPosts);
-      } catch (error) {
-        console.error('Error fetching posts:', error)
+      setIsChangingPassword(false)
+    } catch (err) {
+      if (err.response && err.response.data) {
+        alert(err.response.data.error)
       }
     }
-    fetchPosts()
-  }, [privateAxios])
-
-  // Handle like button click
-  const handleLike = (postId) => {
-    // Implement like functionality
-    console.log('Like post with ID:', postId)
-  }
-
-  // Handle comment button click
-  const handleComment = (postId) => {
-    // Implement comment functionality
-    console.log('Comment on post with ID:', postId)
-  }
-
-  const navigateToProfile = () => {
-    // Implement navigation to the user's profile
-    console.log('Navigate to profile')
   }
 
   return (
@@ -104,93 +123,149 @@ const Community = () => {
         <div className="user-section">
           <img src={user.profilePic} alt="user-pic" />
           <h2>{user.username}</h2>
+          <div className='follow-count'>
+            <h3>Following: {user.following ? user.following.length : 0}</h3>
+            <h3>Followers: {user.followers ? user.followers.length : 0}</h3>
+          </div>
           <div className="user-actions">
-            <button onClick={() => console.log('Show Likes')}>Likes</button>
-            <button onClick={() => console.log('Show Saved')}>Saved</button>
-            <button onClick={() => console.log('Show Notifications')}>Notifications</button>
-            <button onClick={navigateToProfile}>Go to Profile</button>
+            <button onClick={() => handleButtonClick('create/view')}>Community</button>
+            <button onClick={() => handleButtonClick('likes')}>Likes</button>
+            <button onClick={() => handleButtonClick('notifications')}>Notifications</button>
+            <button onClick={() => handleButtonClick('profile')}>Go to Profile</button>
+            {userRole === 'Moderator' && <button onClick={() => handleButtonClick('pendingPosts')}>Pending Posts</button>}
+            <button onClick={() => setIsChangingUsername(!isChangingUsername)}>
+              {isChangingUsername ? 'Cancel' : 'Change Username'}
+            </button>
+            <button onClick={() => setIsChangingPassword(!isChangingPassword)}>
+              {isChangingPassword ? 'Cancel' : 'Change Password'}
+            </button>
           </div>
         </div>
       </div>
-      <div className="post-creation-and-viewing">
-        <div className="post-creation">
-          <h1>Share Your Recipe</h1>
-          <form onSubmit={handleSubmit} className="recipe-form">
-            <div className="form-group">
-              <label htmlFor="dishName">Dish Name:</label>
-              <input
-                type="text"
-                id="dishName"
-                name="dishName"
-                value={dishData.dishName}
-                onChange={handleFieldChange}
-                placeholder="Enter the name of the dish"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="ingredients">Ingredients:</label>
-              <textarea
-                id="ingredients"
-                name="ingredients"
-                value={dishData.ingredients}
-                onChange={handleFieldChange}
-                placeholder="Enter the ingredients, separated by commas"
-                required
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="image">Dish Image:</label>
-              <input
-                type="file"
-                accept=".jpeg, .jpg, .png"
-                onChange={convertToBase64}
-              />
-            </div>
-            <button type="submit">Submit Recipe</button>
-          </form>
-        </div>
-        <div className="post-viewing">
-          <h2>Community Posts</h2>
-          {posts.length > 0 ? (
-            posts.map((post) => (
-              <div key={post._id} className="post">
-                <div className="post-header">
-                  <img src={post.userProfilePic} alt={post.username} className="user-profile-pic" />
-                  <div className="post-user-info">
-                    <h3>{post.username}</h3>
-                    <p>{new Date(post.datePosted).toLocaleDateString()}</p>
+      <div className='content-viewing'>
+        {currentView === 'create/view' && <PostCreationAndViewing />}
+        {currentView === 'pendingPosts' && <PendingPosts />}
+        {currentView === 'profile' && <Profile />}
+        {currentView === 'notifications' && <Notifications />}
+        {currentView === 'likes' && <Likes />}
+        {currentView === 'searchedUserProfile' && searchedUser && (
+          <div className="searched-user-profile">
+            <div className="profile-header">
+              <img src={searchedUser.profilePic} alt={`${searchedUser.username}-pic`} className="profile-image" />
+              <div className="profile-info">
+                <h2>{searchedUser.username}</h2>
+                <p>Joined: {new Date(searchedUser.joinedDate).toLocaleDateString()}</p>
+                <div className="profile-stats">
+                  <div>
+                    <div className="stat-value">{searchedUser.following ? searchedUser.following.length : 0}</div>
+                    <div className="stat-title">Following</div>
+                  </div>
+                  <div>
+                    <div className="stat-value">{searchedUser.followers ? searchedUser.followers.length : 0}</div>
+                    <div className="stat-title">Followers</div>
+                  </div>
+                  <div>
+                    <div className="stat-value">{searchedUser.posts ? searchedUser.posts.length : 0}</div>
+                    <div className="stat-title">Posts</div>
                   </div>
                 </div>
-                <div className="post-content">
-                  <h4>Dish Name: {post.dishName}</h4>
-                  <p>Ingredients: {post.ingredients}</p>
-                  {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
-                </div>
-                <div className="post-actions">
-                  <button onClick={() => handleLike(post._id)} className="like-button">
-                    ❤️ {post.hearts}
-                  </button>
-                  <button onClick={() => handleComment(post._id)} className="comment-button">
-                    💬 Comment
-                  </button>
-                </div>
+                <button className="follow-button" onClick={handleFollow}>
+                  {isFollowing ? 'Unfollow' : 'Follow'}
+                </button>
               </div>
-            ))
-          ) : (
-            <p>No posts yet. Be the first to share a recipe!</p>
-          )}
-        </div>
+            </div>
+            <div className="posts-section">
+              <h3>Posts</h3>
+              <ul>
+                {searchedUser.posts.map(post => (
+                  <li key={post._id}>
+                    <div className="post-header">
+                      <span className="dish-name">{post.dishName}</span>
+                      <span className="post-date">{new Date(post.datePosted).toLocaleDateString()}</span>
+                    </div>
+                    <div className="post-content">{post.ingredients}</div>
+                    {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
+                    <div className="post-footer">
+                      <span className="likes">{post.likes ? post.likes.length : 0} ❤️</span>
+                      <span className="comments">{post.comments ? post.comments.length : 0} 💬</span>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        )}
+        {isChangingUsername && (
+          <div className="popup-overlay" onClick={() => setIsChangingUsername(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Change Username</h2>
+              <form className="username-change-form" onSubmit={handleUsernameChange}>
+                <input
+                  type="text"
+                  placeholder="Current username"
+                  value={oldUsername}
+                  onChange={(e) => setOldUsername(e.target.value)}
+                  required
+                />
+                <input
+                  type="text"
+                  placeholder="New username"
+                  value={newUsername}
+                  onChange={(e) => setNewUsername(e.target.value)}
+                  required
+                />
+                <button type="submit">Update Username</button>
+              </form>
+            </div>
+          </div>
+        )}
+        {isChangingPassword && (
+          <div className="popup-overlay" onClick={() => setIsChangingPassword(false)}>
+            <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Change Password</h2>
+              <form className="password-change-form" onSubmit={handlePasswordChange}>
+                <input
+                  type="password"
+                  placeholder="Current password"
+                  name='currentPassword'
+                  onChange={handleFieldChange}
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="New password"
+                  name='newPassword'
+                  onChange={handleFieldChange}
+                  required
+                />
+                <input
+                  type="password"
+                  placeholder="Confirm new password"
+                  name='newPasswordConfirmation'
+                  onChange={handleFieldChange}
+                  required
+                />
+                <button type="submit">Change Password</button>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
       <div className="recommendations-and-search">
         <div className="search">
-          <input type="text" placeholder="Search for accounts..." />
+          <input
+            type="text"
+            placeholder="Search for accounts..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={handleSearch}
+          />
         </div>
         <div className="recommendations">
           <h2>Follow Recommendations</h2>
           {/* Recommendations content */}
         </div>
-      </div>
+    </div>
     </div>
   )
 }
