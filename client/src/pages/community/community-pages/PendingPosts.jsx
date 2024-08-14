@@ -1,4 +1,5 @@
 import { useState, useEffect} from 'react'
+import './PendingPosts.css'
 import usePrivateApi from '../../../../hooks/usePrivateApi'
 
 export const PendingPosts = () => {

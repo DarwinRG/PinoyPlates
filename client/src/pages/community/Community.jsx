@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import usePrivateApi from '../../../hooks/usePrivateApi'
 import { useUserData } from '../../../hooks/useUserData'
 import { PostCreationAndViewing } from './community-pages/PostCreationAndViewing'
@@ -14,20 +14,34 @@ const Community = () => {
   const [searchQuery, setSearchQuery] = useState('')
   const [isFollowing, setIsFollowing] = useState(false)
   const [isChangingUsername, setIsChangingUsername] = useState(false)
-  const [isChangingPassword, setIsChangingPassword] = useState(false) // State for password change popup
+  const [isChangingPassword, setIsChangingPassword] = useState(false)
   const [oldUsername, setOldUsername] = useState('')
   const [newUsername, setNewUsername] = useState('')
   const [passwordData, setPasswordData] = useState({})
+  const [likedPosts, setLikedPosts] = useState(new Set())
+  const [posts, setPosts] = useState([]) // Define posts state here
   const userID = localStorage.getItem('userID')
   const userRole = localStorage.getItem('userRole')
-  const { user, setUser } = useUserData() // Added setUser to update user data
+  const { user, setUser } = useUserData()
   const privateAxios = usePrivateApi()
 
   const handleButtonClick = (view) => {
     setCurrentView(view)
     setIsChangingUsername(false)
-    setIsChangingPassword(false) // Hide form when changing view
+    setIsChangingPassword(false)
   }
+
+  useEffect(() => {
+    if (user && user.likes) {
+      setLikedPosts(new Set(user.likes.map(post => post._id)))
+    }
+  }, [user])
+
+  useEffect(() => {
+    if (searchedUser && searchedUser.posts) {
+      setPosts(searchedUser.posts)
+    }
+  }, [searchedUser])
 
   const handleSearch = async (e) => {
     if (e.key === 'Enter' && searchQuery.trim()) {
@@ -93,7 +107,6 @@ const Community = () => {
     }))
   }
 
-
   const handlePasswordChange = async (e) => {
     e.preventDefault()
     if (passwordData.newPassword !== passwordData.newPasswordConfirmation) {
@@ -116,6 +129,49 @@ const Community = () => {
       }
     }
   }
+
+  const handleLike = async (postID) => {
+    try {
+      const response = await privateAxios.post(`posts/like-post/${userID}/${postID}`);
+      if (response.status === 200) {
+        // Update posts with the new hearts count
+        const updatedPosts = posts.map(post =>
+          post._id === postID
+            ? { ...post, hearts: response.data.hearts }
+            : post
+        );
+        setPosts(updatedPosts)
+        // Update the liked state
+        setLikedPosts(prev => new Set(prev.add(postID)));
+        
+      }
+    } catch (error) {
+      console.error('Error liking post:', error);
+    }
+  };
+  
+  const handleUnlike = async (postID) => {
+    try {
+      const response = await privateAxios.delete(`posts/unlike-post/${userID}/${postID}`);
+      if (response.status === 200) {
+        const updatedPosts = posts.map(post =>
+          post._id === postID
+            ? { ...post, hearts: response.data.hearts }
+            : post
+        );
+        setPosts(updatedPosts)
+        // Update the liked state
+        setLikedPosts(prev => {
+          const newSet = new Set(prev)
+          newSet.delete(postID)
+          return newSet
+        })
+
+      }
+    } catch (error) {
+      console.error('Error unliking post:', error);
+    }
+  }  
 
   return (
     <div className="community-container">
@@ -177,7 +233,7 @@ const Community = () => {
             <div className="posts-section">
               <h3>Posts</h3>
               <ul>
-                {searchedUser.posts.map(post => (
+                {posts.map(post => (
                   <li key={post._id}>
                     <div className="post-header">
                       <span className="dish-name">{post.dishName}</span>
@@ -186,7 +242,9 @@ const Community = () => {
                     <div className="post-content">{post.ingredients}</div>
                     {post.dishImage && <img src={post.dishImage} alt={post.dishName} className="post-image" />}
                     <div className="post-footer">
-                      <span className="likes">{post.likes ? post.likes.length : 0} ❤️</span>
+                    <button onClick={() => likedPosts.has(post._id) ? handleUnlike(post._id) : handleLike(post._id)} className="like-button">
+                          ❤️ {post.hearts ? post.hearts.length : 0}
+                        </button>
                       <span className="comments">{post.comments ? post.comments.length : 0} 💬</span>
                     </div>
                   </li>
@@ -265,7 +323,7 @@ const Community = () => {
           <h2>Follow Recommendations</h2>
           {/* Recommendations content */}
         </div>
-    </div>
+      </div>
     </div>
   )
 }

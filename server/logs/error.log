@@ -32,3 +32,6 @@
 2024-08-13 08:53:57 [ERROR]: Error getting user data: Cannot populate path `posts.comments.user` because it is not in your schema. Set the `strictPopulate` option to false to override.
 2024-08-13 08:53:57 [ERROR]: Error getting user data: Cannot populate path `posts.comments.user` because it is not in your schema. Set the `strictPopulate` option to false to override.
 2024-08-14 07:01:39 [ERROR]: Error changing user username User.findOneById is not a function
+2024-08-14 15:53:46 [ERROR]: Error liking post: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
+2024-08-14 15:55:48 [ERROR]: Error liking post: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
+2024-08-14 15:58:43 [ERROR]: Error liking post: Transaction with { txnNumber: 24 } has been aborted.

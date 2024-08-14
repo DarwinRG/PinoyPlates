@@ -1,16 +1,28 @@
-/* Profile Container */
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #e5e5e5; /* Adjusted for contrast */
+  --main-color: #323232;
+  --shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow to match auth CSS */
+}
+
 .profile-container {
   width: 95%;
+  max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f5f8fa; /* Light background color for profile page */
+  background-color: var(--bg-color);
+  border-radius: 8px;
+  box-shadow: var(--shadow); /* Match auth shadow */
 }
 
 /* Profile Header */
 .profile-header {
   display: flex;
   align-items: center;
-  border-bottom: 2px solid #e1e8ed;
+  border-bottom: 2px solid var(--input-focus); /* Border color to match auth CSS */
   padding-bottom: 20px;
   margin-bottom: 20px;
 }
@@ -19,7 +31,7 @@
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  border: 4px solid #1da1f2; /* Border color matching the button */
+  border: 4px solid var(--input-focus); /* Match border color */
   margin-right: 20px;
 }
 
@@ -29,11 +41,14 @@
 
 .profile-username {
   font-size: 2rem;
+  font-weight: 900; /* Bold to match auth CSS */
+  color: var(--font-color);
   margin: 0;
 }
 
 .profile-date-joined {
-  color: #657786;
+  color: var(--font-color-sub);
+  font-size: 1rem;
 }
 
 /* Profile Stats */
@@ -49,29 +64,30 @@
 
 .stat-title {
   font-size: 1rem;
-  color: #657786;
+  color: var(--font-color-sub);
 }
 
 .stat-value {
   font-size: 1.5rem;
-  font-weight: bold;
+  font-weight: 900; /* Bold to match auth CSS */
+  color: var(--font-color);
 }
 
 /* Profile Posts */
 .profile-posts {
-  max-height: 600px; /* Adjust height for scrolling */
+  max-height: 600px;
   overflow-y: auto;
-  border-top: 2px solid #e1e8ed;
+  border-top: 2px solid var(--input-focus); /* Border color to match auth CSS */
   padding-top: 20px;
 }
 
 .profile-post {
-  background: #fff;
-  border: 1px solid #e1e8ed;
+  background: var(--bg-color);
+  border: 2px solid var(--input-focus); /* Border color to match auth CSS */
   border-radius: 8px;
   padding: 20px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: var(--shadow); /* Match shadow to auth CSS */
 }
 
 .post-header {
@@ -82,15 +98,18 @@
 
 .post-title {
   font-size: 1.25rem;
-  font-weight: bold;
+  font-weight: 900; /* Bold to match auth CSS */
+  color: var(--font-color);
 }
 
 .post-date {
-  color: #657786;
+  color: var(--font-color-sub);
+  font-size: 0.875rem;
 }
 
 .post-ingredients {
   margin-bottom: 10px;
+  color: var(--font-color);
 }
 
 .post-image {
@@ -106,21 +125,24 @@
 
 .post-likes {
   font-size: 1rem;
+  color: var(--font-color);
 }
 
 .comments-toggle-button {
-  background-color: #1da1f2; /* Twitter blue color */
-  color: #fff;
-  border: none;
+  background-color: var(--input-focus); /* Button color to match auth CSS */
+  color: var(--bg-color);
+  border: 2px solid var(--input-focus); /* Border color to match auth CSS */
   border-radius: 20px;
   padding: 5px 10px;
   cursor: pointer;
   font-size: 0.875rem;
-  transition: background-color 0.3s;
+  font-weight: 600; /* Match auth button font weight */
+  transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .comments-toggle-button:hover {
-  background-color: #0d95e8; /* Slightly darker blue on hover */
+  background-color: darken(var(--input-focus), 10%); /* Slightly darker on hover */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); /* Match hover shadow */
 }
 
 .comments-list {
@@ -141,13 +163,14 @@
 }
 
 .comment-text {
-  background: #f5f8fa;
+  background: var(--bg-color-alt);
   border-radius: 8px;
   padding: 10px;
   max-width: 90%;
+  color: var(--font-color);
 }
 
 .no-comments, .no-posts {
-  color: #657786;
+  color: var(--font-color-sub);
   font-style: italic;
 }

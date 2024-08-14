@@ -1,7 +1,7 @@
 const RecipeRecommendations = ({ recommendations }) => {
   return (
     <div className="recipe-container">
-      {recommendations.length > 0 && 
+      {recommendations.length > 0 &&
         recommendations.map((recipe, index) => (
           <div key={index} className="recipe">
             <img

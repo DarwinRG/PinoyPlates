@@ -1,3 +1,13 @@
+/* Define color variables based on auth design */
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #f4f4f4;
+  --main-color: #323232;
+}
+
 /* General Container Styles */
 .community-container {
   display: grid;
@@ -6,9 +16,8 @@
   gap: 20px;
   padding: 20px;
   font-family: 'Roboto', sans-serif;
-  background-color: #121212;
+  background-color: #e5e5e5; /* Background similar to auth design */
   height: 100%;
-  font-family:  "Merriweather Sans", sans-serif;
 }
 
 /* User Details Styles */
@@ -19,8 +28,8 @@
 .user-section {
   height: 100vh;
   width: 95%;
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--bg-color);
+  border: 1px solid var(--main-color);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -37,6 +46,7 @@
 .user-section h2 {
   margin: 10px 0 20px;
   font-size: 1.5rem;
+  color: var(--font-color);
 }
 
 .follow-count {
@@ -49,6 +59,7 @@
 
 .follow-count h3 {
   font-size: 0.9rem;
+  color: var(--font-color-sub);
 }
 
 /* User Actions Styles */
@@ -59,8 +70,8 @@
 }
 
 .user-actions button {
-  background-color: #0e0e10;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--bg-color);
   border: none;
   border-radius: 8px;
   padding: 10px;
@@ -70,11 +81,11 @@
 }
 
 .user-actions button:hover {
-  background-color: #1f1e1e;
+  background-color: var(--input-focus);
   transform: scale(1.05);
 }
 
-/* Post Creation and Viewing Styles */
+/* Content Viewing Styles */
 .content-viewing {
   grid-column: 2 / 3;
   display: flex;
@@ -84,122 +95,58 @@
   height: 100vh;
 }
 
-/* Post Creation Styles */
-.post-creation {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Button Styles */
-button {
-  padding: 12px 20px;
-  border: none;
-  border-radius: 8px;
-  background-color: #000;
-  color: white;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-button:hover {
-  background-color: #272827;
-  transform: scale(1.05);
-}
-
-/* Post Viewing Styles */
-.post-viewing {
-  background-color: #9CA986;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.post-viewing h2 {
-  margin-bottom: 20px;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-/* Individual Post Styles */
-.post {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  background-color: #fafafa;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.post-header {
+/* Popup Overlay Styles */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.user-profile-pic {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  margin-right: 15px;
-  border: 2px solid #ddd;
-}
-
-.post-user-info {
-  flex: 1;
-}
-
-.post-user-info h3 {
-  margin: 0;
-  font-size: 1.2rem;
-}
-
-.post-user-info p {
-  margin: 0;
-  color: #777;
-  font-size: 0.9rem;
-}
-
-.post-content {
-  margin-bottom: 15px;
-}
-
-.post-content h4 {
-  margin: 0 0 10px 0;
-}
-
-.post-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-top: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.post-actions {
-  display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
 }
 
-.like-button,
-.comment-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 1rem;
-  color: #007bff;
-  transition: color 0.3s, transform 0.2s;
+.popup-content {
+  background: var(--bg-color);
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  max-width: 90%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.like-button:hover,
-.comment-button:hover {
-  color: #0056b3;
-  transform: scale(1.05);
+.popup-content h2 {
+  margin-top: 0;
+  color: var(--font-color);
+}
+
+/* Form Styles */
+.username-change-form, .password-change-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.username-change-form input, .password-change-form input {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid var(--font-color-sub);
+  border-radius: 4px;
+}
+
+.username-change-form button, .password-change-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  background: var(--input-focus);
+  color: var(--bg-color);
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.username-change-form button:hover, .password-change-form button:hover {
+  background: #0056b3;
 }
 
 /* Recommendations and Search Styles */
@@ -211,8 +158,8 @@ button:hover {
 }
 
 .recommendations {
-  background-color: #fff;
-  border: 1px solid #ddd;
+  background-color: var(--bg-color);
+  border: 1px solid var(--font-color-sub);
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -221,158 +168,38 @@ button:hover {
 .search input {
   width: 100%;
   padding: 12px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--font-color-sub);
   border-radius: 8px;
   font-size: 1rem;
-}
-
-/* Pending Posts View Styles */
-.pending-posts-view {
-  background-color: #9CA986;
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pending-posts-view h2 {
-  margin-bottom: 20px;
-  font-size: 2rem;
-  font-weight: 700;
-}
-
-/* Individual Pending Post Styles */
-.pending-post {
-  border: 1px solid #ddd;
-  border-radius: 12px;
-  padding: 15px;
-  margin-bottom: 15px;
-  background-color: #fafafa;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pending-post-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.pending-post-user-profile-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  margin-right: 10px;
-  border: 2px solid #ddd;
-}
-
-.pending-post-user-info {
-  flex: 1;
-}
-
-.pending-post-user-info h3 {
-  margin: 0;
-  font-size: 1.1rem;
-}
-
-.pending-post-user-info p {
-  margin: 0;
-  color: #777;
-  font-size: 0.8rem;
-}
-
-.pending-post-content {
-  margin-bottom: 10px;
-}
-
-.pending-post-content h4 {
-  margin: 0 0 5px 0;
-}
-
-.pending-post-image {
-  max-width: 100%;
-  height: auto;
-  border-radius: 8px;
-  margin-top: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-.pending-post-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.approve-button,
-.reject-button {
-  background-color: #808D7C;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 0.9rem;
-  cursor: pointer;
-  transition: background-color 0.3s, transform 0.2s;
-}
-
-.approve-button:hover {
-  background-color: #5F6F65;
-  transform: scale(1.05);
-}
-
-.reject-button {
-  background-color: #E57373;
-}
-
-.reject-button:hover {
-  background-color: #C62828;
-  transform: scale(1.05);
-}
-
-.notifications-button {
-  position: relative;
-}
-
-.notification-dot {
-  position: absolute;
-  top: -5px;
-  right: -5px;
-  width: 10px;
-  height: 10px;
-  background-color: red;
-  border-radius: 50%;
-}
-
-.has-unread .notification-dot {
-  display: block;
+  color: var(--font-color);
 }
 
 /* Styles for Searched User Profile */
 .searched-user-profile {
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   padding: 20px;
   margin: auto;
   height: 100vh;
-  width: 95%; /* Increased width */
-  border-top: 5px solid #1da1f2; /* Top border with Twitter blue color */
+  width: 95%;
 }
 
 .profile-header {
   display: flex;
   align-items: center;
-  border-bottom: 1px solid #e1e8ed; /* Light border for separation */
+  border-bottom: 1px solid var(--font-color-sub);
   padding-bottom: 20px;
   margin-bottom: 20px;
 }
 
 .profile-header .profile-image {
-  width: 150px; /* Larger profile image */
+  width: 150px;
   height: 150px;
   border-radius: 50%;
   margin-right: 20px;
   object-fit: cover;
-  border: 4px solid #fff; /* White border to separate from background */
+  border: 4px solid var(--bg-color);
 }
 
 .profile-header .profile-info {
@@ -380,22 +207,22 @@ button:hover {
 }
 
 .profile-header h2 {
-  font-size: 32px; /* Larger font size for username */
+  font-size: 32px;
   font-weight: 700;
-  color: #333;
+  color: var(--font-color);
   margin-bottom: 10px;
 }
 
 .profile-header p {
-  font-size: 18px; /* Slightly larger font size */
-  color: #657786; /* Gray color for secondary text */
+  font-size: 18px;
+  color: var(--font-color-sub);
   margin: 5px 0;
 }
 
 .profile-header .profile-stats {
   display: flex;
-  gap: 30px; /* Increased gap between stats */
-  border-top: 1px solid #e1e8ed; /* Added border for separation */
+  gap: 30px;
+  border-top: 1px solid var(--font-color-sub);
   padding-top: 10px;
 }
 
@@ -404,26 +231,26 @@ button:hover {
 }
 
 .profile-stats .stat-value {
-  font-size: 22px; /* Larger font size for stat values */
+  font-size: 22px;
   font-weight: 700;
-  color: #333;
+  color: var(--font-color);
 }
 
 .profile-stats .stat-title {
   font-size: 16px;
-  color: #657786;
+  color: var(--font-color-sub);
 }
 
 .posts-section {
   margin-top: 20px;
-  max-height: 500px; /* Set a maximum height */
-  overflow-y: auto; /* Enable vertical scrolling */
+  max-height: 500px;
+  overflow-y: auto;
 }
 
 .posts-section h3 {
   font-size: 24px;
   font-weight: 700;
-  color: #333;
+  color: var(--font-color);
   margin-bottom: 15px;
 }
 
@@ -434,17 +261,17 @@ button:hover {
 }
 
 .posts-section li {
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 10px;
   padding: 20px;
   margin-bottom: 15px;
-  border: 1px solid #e1e8ed;
+  border: 1px solid var(--font-color-sub);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .posts-section li p {
   font-size: 16px;
-  color: #333;
+  color: var(--font-color);
   margin: 5px 0;
 }
 
@@ -458,17 +285,17 @@ button:hover {
 .posts-section .post-header .dish-name {
   font-size: 18px;
   font-weight: 700;
-  color: #333;
+  color: var(--font-color);
 }
 
 .posts-section .post-header .post-date {
   font-size: 14px;
-  color: #657786;
+  color: var(--font-color-sub);
 }
 
 .posts-section .post-content {
   font-size: 16px;
-  color: #333;
+  color: var(--font-color);
   margin-bottom: 10px;
 }
 
@@ -483,87 +310,13 @@ button:hover {
   display: flex;
   justify-content: space-between;
   font-size: 14px;
-  color: #657786;
+  color: var(--font-color-sub);
 }
 
 .posts-section .post-footer .likes {
-  color: #1da1f2;
+  color: var(--input-focus);
 }
 
 .posts-section .post-footer .comments {
-  color: #657786;
+  color: var(--font-color-sub);
 }
-
-/* Styles for Follow Button */
-.profile-info .follow-button {
-  background-color: #1da1f2; /* Twitter blue color */
-  color: #fff;
-  border: none;
-  border-radius: 25px;
-  padding: 10px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  margin-top: 10px;
-  transition: background-color 0.3s;
-}
-
-.profile-info .follow-button:hover {
-  background-color: #0d95e8; /* Slightly darker blue on hover */
-}
-
-.profile-info .follow-button:disabled {
-  background-color: #b0bec5; /* Gray color for disabled state */
-  cursor: not-allowed;
-}
-
-.popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.popup-content {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  width: 300px;
-  max-width: 90%;
-}
-
-.popup-content h2 {
-  margin-top: 0;
-}
-
-.username-change-form, .password-change-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.username-change-form input, .password-change-form input {
-  margin-bottom: 10px;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.username-change-form button, .password-change-form button {
-  padding: 10px;
-  border: none;
-  border-radius: 4px;
-  background: #007bff;
-  color: white;
-  cursor: pointer;
-}
-
-.username-change-form button:hover, .password-change-form button:hover {
-  background: #0056b3;
-}
-
-

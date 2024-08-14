@@ -1,127 +1,127 @@
-import { useState, useEffect } from 'react'
-import usePrivateApi from '../../../../hooks/usePrivateApi'
-import './PostCreationAndViewing.css'
-import '../community.css'
-import { useUserData } from '../../../../hooks/useUserData'
+import { useState, useEffect } from 'react';
+import usePrivateApi from '../../../../hooks/usePrivateApi';
+import './PostCreationAndViewing.css';
+import '../community.css';
+import { useUserData } from '../../../../hooks/useUserData';
 
 export const PostCreationAndViewing = () => {
-  const [dishData, setDishData] = useState({})
-  const [posts, setPosts] = useState([])
-  const [base64Image, setBase64Image] = useState('')
-  const [viewType, setViewType] = useState('community')
-  const [selectedUser, setSelectedUser] = useState(null)
-  const [userPosts, setUserPosts] = useState([])
-  const [isFollowing, setIsFollowing] = useState(false)
-  const [likedPosts, setLikedPosts] = useState(new Set())
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [isCreatingAPost, setIsCreatingAPost] = useState(false)
-  const userID = localStorage.getItem('userID')
-  const privateAxios = usePrivateApi()
-  const { user } = useUserData()
+  const [dishData, setDishData] = useState({});
+  const [posts, setPosts] = useState([]);
+  const [base64Image, setBase64Image] = useState('');
+  const [viewType, setViewType] = useState('community');
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [userPosts, setUserPosts] = useState([]);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const [likedPosts, setLikedPosts] = useState(new Set());
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [isCreatingAPost, setIsCreatingAPost] = useState(false);
+  const userID = localStorage.getItem('userID');
+  const privateAxios = usePrivateApi();
+  const { user } = useUserData();
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const endpoint = viewType === 'community' ? `posts/community-posts?page=${currentPage}&limit=10` : `posts/following-posts/${userID}?page=${currentPage}&limit=10`;
-        const response = await privateAxios(endpoint)
+        const response = await privateAxios(endpoint);
         if (response.data && Array.isArray(response.data.posts)) {
-          setPosts(response.data.posts)
-          setTotalPages(response.data.totalPages)
+          setPosts(response.data.posts);
+          setTotalPages(response.data.totalPages);
         } else {
-          setPosts([])
+          setPosts([]);
         }
       } catch (error) {
-        console.error('Error fetching posts:', error)
-        setPosts([])
+        console.error('Error fetching posts:', error);
+        setPosts([]);
       }
-    }
-    fetchPosts()
-  }, [viewType, currentPage, privateAxios, userID])
+    };
+    fetchPosts();
+  }, [viewType, currentPage, privateAxios, userID]);
 
   useEffect(() => {
     if (user && user.likes) {
-      setLikedPosts(new Set(user.likes.map(post => post._id)))
+      setLikedPosts(new Set(user.likes.map(post => post._id)));
     }
-  }, [user])
+  }, [user]);
 
   const handleFieldChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setDishData((prevData) => ({
       ...prevData,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
   const convertToBase64 = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
       reader.onload = () => {
-        setBase64Image(reader.result)
-      }
+        setBase64Image(reader.result);
+      };
       reader.onerror = (error) => {
-        console.error('Error reading file:', error)
-      }
+        console.error('Error reading file:', error);
+      };
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const formData = new FormData()
-    formData.append('dishName', dishData.dishName)
-    formData.append('ingredients', dishData.ingredients)
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append('dishName', dishData.dishName);
+    formData.append('ingredients', dishData.ingredients);
     if (base64Image) {
-      formData.append('dishImage', base64Image)
+      formData.append('dishImage', base64Image);
     }
     try {
-      const response = await privateAxios.post(`/posts/create-post/${userID}`, formData)
+      const response = await privateAxios.post(`/posts/create-post/${userID}`, formData);
       if (response.status === 201) {
-        alert(response.data.message)
-        setDishData({})
-        setBase64Image('')
-        setViewType('community')
-        setCurrentPage(1) // Reset to the first page after submission
+        alert(response.data.message);
+        setDishData({});
+        setBase64Image('');
+        setViewType('community');
+        setCurrentPage(1); // Reset to the first page after submission
       }
     } catch (error) {
-      console.error('Error submitting recipe:', error)
+      console.error('Error submitting recipe:', error);
     }
-  }
+  };
 
   const toggleView = (type) => {
     setViewType(type);
     setCurrentPage(1); // Reset to the first page when changing view
-  }
+  };
 
   const handleUsernameClick = async (username) => {
     try {
-      const response = await privateAxios.get(`user/get-user-data/${username}`)
-      setSelectedUser(response.data.currentUser)
-      setUserPosts(response.data.currentUser.posts || [])
-      setIsFollowing(response.data.currentUser.followers.includes(userID))
-      setViewType('profile')
+      const response = await privateAxios.get(`user/get-user-data/${username}`);
+      setSelectedUser(response.data.currentUser);
+      setUserPosts(response.data.currentUser.posts || []);
+      setIsFollowing(response.data.currentUser.followers.includes(userID));
+      setViewType('profile');
     } catch (error) {
-      console.error('Error fetching user data:', error)
+      console.error('Error fetching user data:', error);
     }
-  }
+  };
 
   const closeProfile = () => {
-    setSelectedUser(null)
-    setViewType('community')
-  }
+    setSelectedUser(null);
+    setViewType('community');
+  };
 
   const handleLike = async (postID) => {
     try {
-      const response = await privateAxios.post(`posts/like-post/${userID}/${postID}`)
+      const response = await privateAxios.post(`posts/like-post/${userID}/${postID}`);
       if (response.status === 200) {
         const updatedPosts = posts.map(post =>
           post._id === postID
             ? { ...post, hearts: response.data.hearts }
             : post
-        )
+        );
         setPosts(updatedPosts);
-        setLikedPosts(prev => new Set(prev.add(postID)))
+        setLikedPosts(prev => new Set(prev.add(postID)));
 
         if (viewType === 'profile' && selectedUser) {
           const updatedUserPosts = userPosts.map(post =>
@@ -129,95 +129,95 @@ export const PostCreationAndViewing = () => {
               ? { ...post, hearts: response.data.hearts }
               : post
           );
-          setUserPosts(updatedUserPosts)
+          setUserPosts(updatedUserPosts);
         }
       }
     } catch (error) {
-      alert('Error liking post:', error)
+      alert('Error liking post:', error);
     }
-  }
+  };
 
   const handleUnlike = async (postID) => {
     try {
-      const response = await privateAxios.delete(`posts/unlike-post/${userID}/${postID}`)
+      const response = await privateAxios.delete(`posts/unlike-post/${userID}/${postID}`);
       if (response.status === 200) {
         const updatedPosts = posts.map(post =>
           post._id === postID
             ? { ...post, hearts: response.data.hearts }
             : post
-        )
-        setPosts(updatedPosts)
+        );
+        setPosts(updatedPosts);
         setLikedPosts(prev => {
-          const newSet = new Set(prev)
-          newSet.delete(postID)
-          return newSet
-        })
+          const newSet = new Set(prev);
+          newSet.delete(postID);
+          return newSet;
+        });
 
         if (viewType === 'profile' && selectedUser) {
           const updatedUserPosts = userPosts.map(post =>
             post._id === postID
               ? { ...post, hearts: response.data.hearts }
               : post
-          )
-          setUserPosts(updatedUserPosts)
+          );
+          setUserPosts(updatedUserPosts);
         }
       }
     } catch (error) {
-      console.error('Error unliking post:', error.response.data.error)
+      console.error('Error unliking post:', error.response.data.error);
     }
-  }
+  };
 
   const handleComment = async (postID, comment) => {
     try {
-      const response = await privateAxios.post(`/posts/comment/${postID}`, { comment })
+      const response = await privateAxios.post(`/posts/comment/${postID}`, { comment });
       if (response.status === 200) {
         setPosts(posts.map(post =>
           post._id === postID
             ? { ...post, comments: [...post.comments, response.data.comment] }
             : post
-        ))
+        ));
         if (selectedUser) {
           setUserPosts(userPosts.map(post =>
             post._id === postID
               ? { ...post, comments: [...post.comments, response.data.comment] }
               : post
-          ))
+          ));
         }
       }
     } catch (error) {
-      console.error('Error commenting on post:', error)
+      console.error('Error commenting on post:', error);
     }
-  }
+  };
 
   const followUser = async () => {
     try {
       const response = await privateAxios.post(`user/follow/${user.username}/${selectedUser.username}`);
       if (response.status === 200) {
-        alert(response.data.message)
-        setIsFollowing(true)
+        alert(response.data.message);
+        setIsFollowing(true);
       }
     } catch (err) {
-      alert(err.response.data.error)
+      alert(err.response.data.error);
     }
-  }
+  };
 
   const unfollowUser = async () => {
     try {
       const response = await privateAxios.post(`user/unfollow/${user.username}/${selectedUser.username}`);
       if (response.status === 200) {
-        alert(response.data.message)
-        setIsFollowing(false)
+        alert(response.data.message);
+        setIsFollowing(false);
       }
     } catch (err) {
-      alert(err.response.error)
+      alert(err.response.error);
     }
-  }
+  };
 
   const loadMorePosts = () => {
     if (currentPage < totalPages) {
-      setCurrentPage(prevPage => prevPage + 1)
+      setCurrentPage(prevPage => prevPage + 1);
     }
-  }
+  };
 
   return (
     <div className="post-creation-and-viewing">
@@ -318,7 +318,6 @@ export const PostCreationAndViewing = () => {
               <button type="submit" className="submit-button">Submit</button>
             </form>
           </div> 
-        )
           <div className="view-toggle">
             <button onClick={() => toggleView('community')} className={`view-button ${viewType === 'community' ? 'active' : ''}`}>
               Community Posts
@@ -365,5 +364,5 @@ export const PostCreationAndViewing = () => {
         </div>
       )}
     </div>
-  )
-}
+  );
+};

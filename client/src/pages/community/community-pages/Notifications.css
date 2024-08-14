@@ -1,22 +1,32 @@
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #f9f9f9;
+  --main-color: #323232;
+}
+
 .notifications-container {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--bg-color);
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Adjusted to match auth CSS shadow */
 }
 
 .notifications-header {
-  border-bottom: 1px solid #ddd;
+  border-bottom: 2px solid var(--input-focus); /* Border-bottom effect */
   padding-bottom: 10px;
   margin-bottom: 20px;
 }
 
 .notifications-header h2 {
-  font-size: 1.5rem;
-  color: #333;
+  font-size: 1.8rem; /* Increased font size for consistency */
+  font-weight: bold;
+  color: var(--main-color);
 }
 
 .notifications-list {
@@ -30,6 +40,8 @@
   align-items: flex-start;
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  transition: background-color 0.3s; /* Smooth transition for background color */
+  cursor: pointer;
 }
 
 .notification:last-child {
@@ -54,43 +66,26 @@
 .notification-message p {
   margin: 0;
   font-size: 1rem;
-  color: #333;
+  color: var(--font-color);
 }
 
 .notification-message span {
   display: block;
   font-size: 0.875rem;
-  color: #666;
+  color: var(--font-color-sub);
 }
 
 .no-notifications {
   text-align: center;
   font-size: 1rem;
-  color: #888;
+  color: var(--font-color-sub);
 }
 
 .notification.unread {
-  background-color: #f0f0f0; /* Lighter color for unread notifications */
+  background-color: var(--bg-color-alt); /* Lighter color for unread notifications */
 }
 
-.notification {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-  cursor: pointer;
+/* Hover and active states */
+.notification:hover {
+  background-color: var(--bg-color-alt);
 }
-
-.notification-profile-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
-.notification-message p {
-  margin: 0;
-}
-
-.no-notifications {
-  text-align: center;
-  color: #888;
-}
-

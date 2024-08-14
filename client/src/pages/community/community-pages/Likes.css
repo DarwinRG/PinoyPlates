@@ -1,8 +1,19 @@
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #666;
+  --main-color: #323232;
+}
+
 .likes-container {
   padding: 20px;
-  background-color: #f4f4f4;
+  background-color: var(--bg-color);
   border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Shadow similar to auth CSS */
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .likes-header {
@@ -10,9 +21,12 @@
 }
 
 .likes-header h2 {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: bold;
-  color: #333;
+  color: var(--main-color);
+  border-bottom: 2px solid var(--input-focus); /* Border-bottom effect */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .likes-list {
@@ -24,10 +38,10 @@
 .liked-post {
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: var(--bg-color);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 4px 4px var(--main-color); /* Shadow similar to auth CSS */
 }
 
 .liked-post-image {
@@ -45,17 +59,17 @@
 .liked-post-info h3 {
   font-size: 1.4rem;
   margin: 0 0 5px;
-  color: #555;
+  color: var(--font-color);
 }
 
 .liked-post-info p {
   font-size: 1rem;
-  color: #777;
+  color: var(--font-color-sub);
 }
 
 .no-liked-posts {
   text-align: center;
-  color: #999;
+  color: var(--font-color-sub);
   font-size: 1.2rem;
   margin-top: 20px;
 }
