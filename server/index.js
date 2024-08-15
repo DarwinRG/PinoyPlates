@@ -21,7 +21,7 @@ const token = require('./router/token')
 const app = express()
 
 const corsOptions = {
-  origin: 'http://localhost:5173', // replace with your frontend URL
+  origin: process.env.CLIENT, // replace with your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
