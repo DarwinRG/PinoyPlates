@@ -1,5 +1,6 @@
 const logger = require('../logger/logger')
 const axios = require('axios')
+const dotenv = require('dotenv').config()
 
 const getRecipeRecommendations = async (req, res) => {
   const userIngredients = req.body.ingredients
@@ -10,7 +11,7 @@ const getRecipeRecommendations = async (req, res) => {
     }
     console.log(userIngredients)
       // Send request to Flask service
-      const response = await axios.post('http://localhost:5001/recommend', {
+      const response = await axios.post(process.env.FLASK_URL, {
           ingredients: userIngredients
       })
 
