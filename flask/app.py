@@ -43,5 +43,9 @@ def recommend():
 
     return jsonify(results)
 
+@app.route('/ping', methods=['GET'])
+def ping():
+    return jsonify({'status': 'success', 'message': 'Service is up and running!'})
+
 if __name__ == '__main__':
     app.run(debug=True)  

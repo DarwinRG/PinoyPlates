@@ -21,7 +21,7 @@ const token = require('./router/token')
 const app = express()
 
 const corsOptions = {
-  origin: process.env.CLIENT, // replace with your frontend URL
+  origin: 'http://localhost:5173', // replace with your frontend URL
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204,
@@ -67,6 +67,10 @@ app.use('/posts', posts)
 app.use('/token', token)
 
 const port = process.env.PORT || 5000
+
+app.use('/helloworld', (_, res) => {
+  res.send('<h1>Hello World</h1>')
+})
 
 const start = async() => {
   try {

@@ -1,7 +1,7 @@
 /* src/components/Home.css */
 
 .home-container {
-  background-image: url('background.jpg');
+  background-image: url('../../../public/background.jpg');
   background-size: cover;
   background-position: center;
   height: 100vh;
