@@ -47,7 +47,7 @@ const Home = () => {
 
   useEffect(() => {
     if (navigateToCommunity) {
-      navigate('/community')
+      navigate('/community/create&view')
     }
   }, [navigateToCommunity, navigate])
 

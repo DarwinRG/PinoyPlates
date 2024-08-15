@@ -14,16 +14,16 @@ const { verifyToken } = require('../middleware/verifyToken')
 router.get('/get-user-data/:username', verifyToken, (req, res) => getUserData(req, res) )
 
 // Route for uploading user profile picture
-router.post('/upload-user-pic/:username', (req, res) => uploadProfilePic(req, res))
+router.post('/upload-user-pic/:username', verifyToken, (req, res) => uploadProfilePic(req, res))
 
 // Route for following another user
-router.post('/follow/:username/:followingUsername', (req, res) => followUser(req, res))
+router.post('/follow/:username/:followingUsername', verifyToken, (req, res) => followUser(req, res))
 
 // Route for unfollowing another user
-router.post('/unfollow/:username/:followingUsername', (req, res) => unfollowUser(req, res))
+router.post('/unfollow/:username/:followingUsername', verifyToken, (req, res) => unfollowUser(req, res))
 
 // Route for changing username
-router.put('/change-username/:userID', (req, res) => changeUserName(req, res))
+router.put('/change-username/:userID', verifyToken, (req, res) => changeUserName(req, res))
 
 
 

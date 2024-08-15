@@ -1,0 +1,85 @@
+:root {
+  --input-focus: #2d8cf0;
+  --font-color: #323232;
+  --font-color-sub: #666;
+  --bg-color: #fff;
+  --bg-color-alt: #f0f0f0;
+  --main-color: #323232;
+}
+
+/* Container for the verification form */
+.verify-email-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #e5e5e5;
+}
+
+.verify-email-container h2 {
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--main-color);
+  margin-bottom: 20px;
+}
+
+.verify-email-container form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  background-color: var(--bg-color);
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--main-color);
+}
+
+/* Input field styling */
+.verify-email-container input[type="text"] {
+  width: 250px;
+  height: 40px;
+  padding: 5px 10px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--font-color);
+  outline: none;
+}
+
+.verify-email-container input[type="text"]::placeholder {
+  color: var(--font-color-sub);
+  opacity: 0.8;
+}
+
+.verify-email-container input[type="text"]:focus {
+  border-color: var(--input-focus);
+}
+
+/* Button styling */
+.verify-email-container button {
+  width: 120px;
+  height: 40px;
+  border-radius: 5px;
+  border: 2px solid var(--main-color);
+  background-color: var(--bg-color);
+  box-shadow: 4px 4px var(--main-color);
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--font-color);
+  cursor: pointer;
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.verify-email-container button:hover {
+  background-color: var(--input-focus);
+}
+
+.verify-email-container button:active {
+  box-shadow: 0 0 var(--main-color);
+  transform: translate(3px, 3px);
+}

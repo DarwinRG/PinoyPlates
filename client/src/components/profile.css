@@ -1,10 +1,24 @@
+:root {
+  --input-focus: #2d8cf0; /* Blue accent color */
+  --font-color: #323232; /* Dark gray for text */
+  --font-color-sub: #666; /* Lighter gray for subtext */
+  --bg-color: #fff; /* White background */
+  --bg-color-alt: #666; /* Alternative gray background */
+  --main-color: #323232; /* Dark gray for primary elements */
+  --button-bg: #323232; /* Dark gray for buttons */
+  --button-hover-bg: #2d8cf0; /* Blue on hover */
+  --shadow-color: rgba(0, 0, 0, 0.2); /* Consistent shadow across elements */
+  --button-font-color: #fff; /* White text for buttons */
+}
+
+/* Profile Section */
 .profile-section {
   display: flex;
   flex-direction: column;
   width: 400px;
   height: 100vh;
-  background-color: #ffff;
-  color: #3c5c24;
+  background-color: var(--bg-color);
+  color: var(--main-color);
   box-shadow: 5px 0 10px rgba(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
@@ -26,7 +40,7 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-color);
   margin: 2px;
 }
 
@@ -41,19 +55,72 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px var(--shadow-color);
   margin: 2px;
 }
 
+/* Hide Profile Section Button */
 .hide-profile-section {
   position: absolute;
   top: 1%;
   left: 92%;
   z-index: 0;
-  background-color: #4E7133;
+  background-color: var(--main-color);
   padding: 8px;
-  color: #fff;
+  color: var(--button-font-color);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+
+.hide-profile-section:hover {
+  background-color: var(--button-hover-bg);
+}
+
+/* Change Profile Picture Button */
+.change-pic-btn {
+  width: 200px;
+  height: 40px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--button-font-color);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.change-pic-btn:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.change-pic-btn:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px var(--shadow-color);
+}
+
+/* Upload and Cancel Buttons */
+.upload-btn-choices button {
+  width: 80px;
+  height: 35px;
+  border-radius: 5px;
+  border: none;
+  background-color: var(--button-bg);
+  color: var(--button-font-color);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--shadow-color);
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.upload-btn-choices button:hover {
+  background-color: var(--button-hover-bg);
+}
+
+.upload-btn-choices button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px var(--shadow-color);
 }

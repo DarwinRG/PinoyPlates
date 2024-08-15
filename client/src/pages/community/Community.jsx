@@ -7,9 +7,12 @@ import { Profile } from './community-pages/Profile'
 import { Notifications } from './community-pages/Notifications'
 import { Likes } from './community-pages/Likes'
 import './community.css'
+import { useNavigate, useParams } from 'react-router-dom'
+import api from '../../../utils/api'
 
 const Community = () => {
-  const [currentView, setCurrentView] = useState('create/view')
+  const { view } = useParams()
+  const [currentView, setCurrentView] = useState(view)
   const [searchedUser, setSearchedUser] = useState(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [isFollowing, setIsFollowing] = useState(false)
@@ -22,11 +25,13 @@ const Community = () => {
   const [posts, setPosts] = useState([]) // Define posts state here
   const userID = localStorage.getItem('userID')
   const userRole = localStorage.getItem('userRole')
-  const { user, setUser } = useUserData()
+  const { user } = useUserData()
   const privateAxios = usePrivateApi()
+  const navigate = useNavigate()
 
   const handleButtonClick = (view) => {
     setCurrentView(view)
+    navigate(`/community/${view}`)
     setIsChangingUsername(false)
     setIsChangingPassword(false)
   }
@@ -36,6 +41,17 @@ const Community = () => {
       setLikedPosts(new Set(user.likes.map(post => post._id)))
     }
   }, [user])
+
+  useEffect(() => {
+    if (searchedUser) {
+      if (user && searchedUser) {
+        setIsFollowing(user.following && user.following.includes(searchedUser._id))
+      }
+      if (searchedUser.posts) {
+        setPosts(searchedUser.posts)
+      }
+    }
+  }, [searchedUser, user])
 
   useEffect(() => {
     if (searchedUser && searchedUser.posts) {
@@ -49,27 +65,9 @@ const Community = () => {
         const response = await privateAxios.get(`user/get-user-data/${searchQuery}`)
         setSearchedUser(response.data.currentUser)
         setCurrentView('searchedUserProfile')
-        const following = user.following || []
-        setIsFollowing(following.some(follow => follow._id === response.data.currentUser._id))
       } catch (error) {
         console.error('Error fetching user data:', error)
       }
-    }
-  }
-
-  const handleFollow = async () => {
-    try {
-      if (isFollowing) {
-        await privateAxios.post(`user/unfollow/${searchedUser._id}`)
-        setIsFollowing(false)
-      } else {
-        await privateAxios.post(`user/follow/${searchedUser._id}`)
-        setIsFollowing(true)
-      }
-      const response = await privateAxios.get(`user/get-user-data/${user._id}`)
-      setUser(response.data)
-    } catch (error) {
-      console.error('Error following/unfollowing user:', error)
     }
   }
 
@@ -132,33 +130,33 @@ const Community = () => {
 
   const handleLike = async (postID) => {
     try {
-      const response = await privateAxios.post(`posts/like-post/${userID}/${postID}`);
+      const response = await privateAxios.post(`posts/like-post/${userID}/${postID}`)
       if (response.status === 200) {
         // Update posts with the new hearts count
         const updatedPosts = posts.map(post =>
           post._id === postID
             ? { ...post, hearts: response.data.hearts }
             : post
-        );
+        )
         setPosts(updatedPosts)
         // Update the liked state
-        setLikedPosts(prev => new Set(prev.add(postID)));
+        setLikedPosts(prev => new Set(prev.add(postID)))
         
       }
     } catch (error) {
-      console.error('Error liking post:', error);
+      console.error('Error liking post:', error)
     }
-  };
+  }
   
   const handleUnlike = async (postID) => {
     try {
-      const response = await privateAxios.delete(`posts/unlike-post/${userID}/${postID}`);
+      const response = await privateAxios.delete(`posts/unlike-post/${userID}/${postID}`)
       if (response.status === 200) {
         const updatedPosts = posts.map(post =>
           post._id === postID
             ? { ...post, hearts: response.data.hearts }
             : post
-        );
+        )
         setPosts(updatedPosts)
         // Update the liked state
         setLikedPosts(prev => {
@@ -169,9 +167,50 @@ const Community = () => {
 
       }
     } catch (error) {
-      console.error('Error unliking post:', error);
+      console.error('Error unliking post:', error)
     }
   }  
+
+  const handleLoggingOut = async () => {
+    try {
+      const response = await privateAxios.delete(`auth/logout/${userID}`)
+
+      if (response.status === 200) {
+        localStorage.clear()
+        navigate('/auth')
+      }
+    } catch (err) {
+      alert('Error logging out')
+    }
+  }
+
+  const followUser = async () => {
+    try {
+      const response = await privateAxios.post(`user/follow/${user.username}/${searchedUser.username}`)
+      if (response.status === 200) {
+        alert(response.data.message)
+        setIsFollowing(true)
+      }
+    } catch (err) {
+      alert(err.response.data.error)
+    }
+  }
+
+  const unfollowUser = async () => {
+    try {
+      const response = await privateAxios.post(`user/unfollow/${user.username}/${searchedUser.username}`)
+      if (response.status === 200) {
+        alert(response.data.message)
+        setIsFollowing(false)
+      }
+    } catch (err) {
+      alert(err.response.error)
+    }
+  }
+
+  const handleComment = () => {
+    alert('Comment feature is under development')
+  }
 
   return (
     <div className="community-container">
@@ -184,7 +223,7 @@ const Community = () => {
             <h3>Followers: {user.followers ? user.followers.length : 0}</h3>
           </div>
           <div className="user-actions">
-            <button onClick={() => handleButtonClick('create/view')}>Community</button>
+            <button onClick={() => handleButtonClick('create&view')}>Community</button>
             <button onClick={() => handleButtonClick('likes')}>Likes</button>
             <button onClick={() => handleButtonClick('notifications')}>Notifications</button>
             <button onClick={() => handleButtonClick('profile')}>Go to Profile</button>
@@ -195,11 +234,13 @@ const Community = () => {
             <button onClick={() => setIsChangingPassword(!isChangingPassword)}>
               {isChangingPassword ? 'Cancel' : 'Change Password'}
             </button>
+            <button onClick={handleLoggingOut}>Log Out</button>
+            <button onClick={() => navigate('/')}>Back to Home</button>
           </div>
         </div>
       </div>
       <div className='content-viewing'>
-        {currentView === 'create/view' && <PostCreationAndViewing />}
+        {currentView === 'create&view' && <PostCreationAndViewing />}
         {currentView === 'pendingPosts' && <PendingPosts />}
         {currentView === 'profile' && <Profile />}
         {currentView === 'notifications' && <Notifications />}
@@ -225,9 +266,11 @@ const Community = () => {
                     <div className="stat-title">Posts</div>
                   </div>
                 </div>
-                <button className="follow-button" onClick={handleFollow}>
-                  {isFollowing ? 'Unfollow' : 'Follow'}
-                </button>
+                  { isFollowing ? (
+                    <button className="follow-button unfollow" onClick={unfollowUser}>Unfollow</button>
+                  ) : (
+                    <button className="follow-button follow" onClick={followUser}>Follow</button>
+                  )}
               </div>
             </div>
             <div className="posts-section">
@@ -245,7 +288,7 @@ const Community = () => {
                     <button onClick={() => likedPosts.has(post._id) ? handleUnlike(post._id) : handleLike(post._id)} className="like-button">
                           ❤️ {post.hearts ? post.hearts.length : 0}
                         </button>
-                      <span className="comments">{post.comments ? post.comments.length : 0} 💬</span>
+                      <span onClick={handleComment} className="comments">{post.comments ? post.comments.length : 0} 💬</span>
                     </div>
                   </li>
                 ))}

@@ -1,5 +1,6 @@
 // Import necessary modules and packages
 const express = require('express') // Importing Express framework
+const { verifyToken } = require('../middleware/verifyToken')
 const router = express.Router() // Creating a router object to handle routes
 const {
   registerUser,
@@ -7,7 +8,8 @@ const {
   logIn,
   changePassword,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  logOut
 } = require('../controller/authController')
 
 
@@ -21,16 +23,20 @@ router.post('/verify-email', (req, res) => verifyEmail(req, res))
 router.post('/login', (req, res) => logIn(req, res))
 
 // Route for changing password
-router.put('/change-password/:userID', (req, res) => changePassword(req, res))
+router.put('/change-password/:userID', verifyToken, (req, res) => changePassword(req, res))
 
 // Route for forgot passwords
-router.post('/forgot-password', (req, res) => {
+router.post('/forgot-password', verifyToken, (req, res) => {
   forgotPassword(req, res)
 })
 
 // Route for resetting passwords
-router.put('/reset-password/:resetToken', (req, res) => {
+router.put('/reset-password/:resetToken', verifyToken, (req, res) => {
   resetPassword(req, res)
+})
+
+router.delete('/logout/:userID', (req, res) => {
+  logOut( req, res)
 })
 
 module.exports = router

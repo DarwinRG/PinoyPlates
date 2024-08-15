@@ -15,7 +15,6 @@ export const PostCreationAndViewing = () => {
   const [likedPosts, setLikedPosts] = useState(new Set());
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isCreatingAPost, setIsCreatingAPost] = useState(false);
   const userID = localStorage.getItem('userID');
   const privateAxios = usePrivateApi();
   const { user } = useUserData();
@@ -167,26 +166,8 @@ export const PostCreationAndViewing = () => {
     }
   };
 
-  const handleComment = async (postID, comment) => {
-    try {
-      const response = await privateAxios.post(`/posts/comment/${postID}`, { comment });
-      if (response.status === 200) {
-        setPosts(posts.map(post =>
-          post._id === postID
-            ? { ...post, comments: [...post.comments, response.data.comment] }
-            : post
-        ));
-        if (selectedUser) {
-          setUserPosts(userPosts.map(post =>
-            post._id === postID
-              ? { ...post, comments: [...post.comments, response.data.comment] }
-              : post
-          ));
-        }
-      }
-    } catch (error) {
-      console.error('Error commenting on post:', error);
-    }
+  const handleComment = async () => {
+    alert('Comment feature is under development.')
   };
 
   const followUser = async () => {
@@ -264,7 +245,7 @@ export const PostCreationAndViewing = () => {
                         <button onClick={() => likedPosts.has(post._id) ? handleUnlike(post._id) : handleLike(post._id)} className="like-button">
                           ❤️ {post.hearts ? post.hearts.length : 0}
                         </button>
-                        <button onClick={() => handleComment(post._id)} className="comment-button">
+                        <button onClick={handleComment} className="comment-button">
                           💬 Comment
                         </button>
                       </div>
@@ -346,7 +327,7 @@ export const PostCreationAndViewing = () => {
                     <button onClick={() => likedPosts.has(post._id) ? handleUnlike(post._id) : handleLike(post._id)} className="like-button">
                       ❤️ {post.hearts ? post.hearts.length : 0}
                     </button>
-                    <button onClick={() => handleComment(post._id)} className="comment-button">
+                    <button onClick={handleComment} className="comment-button">
                       💬 Comment
                     </button>
                   </div>

@@ -379,11 +379,31 @@ const resetPassword = async (req, res) => {
   }
 }
 
+const logOut = async (req, res) => {
+  const { userID } = req.params
+  try {
+    // Clear cookies
+    res.clearCookie('accessToken')
+    res.clearCookie('refreshToken')
+
+    logger.info(`User ${userID} logged out successfully.`)
+
+    // Send success message
+    res.status(200).json({ msg: 'Logged out successfully' })
+  } catch (error) {
+    // Handle errors
+    errorLogger.error(`Error logging out: ${error.message}`)
+    res.status(500).json({ error : 'Error logging out. Please try again later.' })
+  }
+}
+
+
 module.exports = {
   registerUser,
   verifyEmail,
   logIn,
   changePassword,
   forgotPassword,
-  resetPassword
+  resetPassword,
+  logOut
 }

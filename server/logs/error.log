@@ -35,3 +35,5 @@
 2024-08-14 15:53:46 [ERROR]: Error liking post: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
 2024-08-14 15:55:48 [ERROR]: Error liking post: Caused by :: Write conflict during plan execution and yielding is disabled. :: Please retry your operation or multi-document transaction.
 2024-08-14 15:58:43 [ERROR]: Error liking post: Transaction with { txnNumber: 24 } has been aborted.
+2024-08-15 06:59:35 [ERROR]: Error getting recommendations:
+2024-08-15 07:17:38 [ERROR]: Error getting recommendations:

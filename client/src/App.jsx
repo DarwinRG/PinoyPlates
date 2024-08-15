@@ -4,6 +4,7 @@ import { AuthProvider } from '../context/AuthContext'
 import { Suspense, lazy } from 'react'
 import ErrorBoundary from '../src/components/ErrorBoundary'
 import UnderDevelopment from '../src/components/warning/UnderDevelopment'
+import ProtectedRoute from './components/ProtectedRoute'
 import './App.css'
 
 const Authentication = lazy(() => import('./pages/auth/Auth'))
@@ -41,8 +42,10 @@ function App() {
                 <Route path='/forgot-password' element={<ForgotPassword />}/>
                 <Route path='/reset-password/:resetToken' element={<ResetPassword />}/>
                 <Route element={<PersistLogin />}>
-                  <Route path='/' element={<Home />} />
-                  <Route path="/community" element={<Community />} />
+                  <Route element={<ProtectedRoute />}>
+                    <Route path='/' element={<Home />} />
+                    <Route path="/community/:view" element={<Community />} />
+                  </Route>
                 </Route>
                 <Route path="*" element={<NotFound />} />
               </Routes>
