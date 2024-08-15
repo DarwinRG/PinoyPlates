@@ -9,13 +9,10 @@ export const useUserData = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    console.log(username)
 
     const fetchUserData = async () => {
       try { 
       const response = await privateAxios.get(`user/get-user-data/${username}`)
-
-      console.log(response)
       setUser(response.data.currentUser)
       } catch (err) {
         console.log(err)

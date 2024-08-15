@@ -4,8 +4,6 @@ import useAuth from "../../hooks/useAuth"
 const ProtectedRoute = () => {
   const { auth } = useAuth()
 
-  console.log(auth.accessToken)
-
   // Check if access token is present and user has the required role
   const isAuthorized = auth?.accessToken 
 

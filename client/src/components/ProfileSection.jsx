@@ -34,7 +34,6 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
       reader.readAsDataURL(file)
 
       reader.onload = () => {
-        console.log(reader.result)
         setBase64Image(reader.result)
       }
 

@@ -24,9 +24,15 @@ const Home = () => {
 
       const response = await privateAxios.post('recipe/get-recommendations', {
         ingredients: ingredients
-      });
+      })
       const data = response.data
+
+      console.log(data)
       setRecommendations(data)
+
+      if (response.data.message) {
+        return alert(response.data.message)
+      }
 
       // Ensure scrolling happens after state is updated
       setTimeout(() => {

@@ -15,6 +15,8 @@ const getRecipeRecommendations = async (req, res) => {
           ingredients: userIngredients
       })
 
+      console.log(response)
+
       // Return the recommendations to the frontend
       res.json(response.data)
   } catch (err) {
