@@ -14,7 +14,7 @@ export const ProfileSection = ({ showProfileSection, setShowProfileSection }) =>
     try {
       const response = await api.post(`user/upload-user-pic/${user.username}`, {
         base64Image: base64Image
-      })
+      }, { withCredentials: true })
 
       if (response.status === 200) {
         alert('Profile picture changed succesfully. Refresh the page to see changes')
