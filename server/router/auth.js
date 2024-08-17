@@ -2,6 +2,7 @@
 const express = require('express') // Importing Express framework
 const { verifyToken } = require('../middleware/verifyToken')
 const router = express.Router() // Creating a router object to handle routes
+const limiter = require('../middleware/rateLimiter') 
 const {
   registerUser,
   verifyEmail,
@@ -14,13 +15,13 @@ const {
 
 
 // Route for user registration
-router.post('/register', (req, res) => registerUser(req, res))
+router.post('/register', limiter, (req, res) => registerUser(req, res))
 
 // Route for email verification
-router.post('/verify-email', (req, res) => verifyEmail(req, res))
+router.post('/verify-email', limiter, (req, res) => verifyEmail(req, res))
 
 // Route for user login
-router.post('/login', (req, res) => logIn(req, res))
+router.post('/login', limiter, (req, res) => logIn(req, res))
 
 // Route for changing password
 router.put('/change-password/:userID', verifyToken, (req, res) => changePassword(req, res))
