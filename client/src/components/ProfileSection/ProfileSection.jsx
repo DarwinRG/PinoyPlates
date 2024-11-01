@@ -1,18 +1,19 @@
 import './profile.css'
-import { useUserData } from '../../hooks/useUserData'
+import { useUserData } from '../../../hooks/useUserData'
 import { useState } from 'react'
-import api from '../../utils/api'
+import usePrivateApi from '../../../hooks/usePrivateApi'
 
 export const ProfileSection = ({ showProfileSection, setShowProfileSection }) => {
   const { user } = useUserData()
   const [ isUploading, setIsUploading ] = useState(false)
   const [ base64Image, setBase64Image ] = useState('')
+  const { privateAxios } = usePrivateApi()
 
   const handleSubmission = async (e) => {
     e.preventDefault()
 
     try {
-      const response = await api.post(`user/upload-user-pic/${user.username}`, {
+      const response = await privateAxios.post(`user/upload-user-pic/${user.username}`, {
         base64Image: base64Image
       }, { withCredentials: true })
 

@@ -1,5 +1,3 @@
-// src/components/ForgotPassword.js
-
 import { useState } from 'react'
 import usePrivateApi from '../../../hooks/usePrivateApi'
 import './forgot-password.css'

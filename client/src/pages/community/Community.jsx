@@ -8,7 +8,6 @@ import { Notifications } from './community-pages/Notifications'
 import { Likes } from './community-pages/Likes'
 import './community.css'
 import { useNavigate, useParams } from 'react-router-dom'
-import api from '../../../utils/api'
 
 const Community = () => {
   const { view } = useParams()

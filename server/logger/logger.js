@@ -40,11 +40,4 @@ const logger = createLogger({
   ],
 })
 
-// Stream for morgan to use
-logger.stream = {
-  write: function (message, encoding) {
-    logger.info(message.trim())
-  },
-}
-
 module.exports = logger

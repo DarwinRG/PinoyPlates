@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import { useUserData } from '../../../../hooks/useUserData';
-import './Profile.css';
+import { useState } from 'react'
+import { useUserData } from '../../../../hooks/useUserData'
+import './Profile.css'
 
 export const Profile = () => {
-  const { user } = useUserData();
-  const [visibleComments, setVisibleComments] = useState({});
+  const { user } = useUserData()
+  const [visibleComments, setVisibleComments] = useState({})
 
   if (!user) {
-    return <div className="profile-loading">Loading...</div>;
+    return <div className="profile-loading">Loading...</div>
   }
 
   const toggleComments = (postId) => {
     setVisibleComments(prev => ({
       ...prev,
       [postId]: !prev[postId]
-    }));
-  };
+    }))
+  }
 
   return (
     <div className="profile-container">

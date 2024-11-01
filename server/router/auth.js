@@ -27,12 +27,12 @@ router.post('/login', limiter, (req, res) => logIn(req, res))
 router.put('/change-password/:userID', verifyToken, (req, res) => changePassword(req, res))
 
 // Route for forgot passwords
-router.post('/forgot-password', verifyToken, (req, res) => {
+router.post('/forgot-password', (req, res) => {
   forgotPassword(req, res)
 })
 
 // Route for resetting passwords
-router.put('/reset-password/:resetToken', verifyToken, (req, res) => {
+router.put('/reset-password/:resetToken', (req, res) => {
   resetPassword(req, res)
 })
 

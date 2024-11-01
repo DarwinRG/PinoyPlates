@@ -42,3 +42,6 @@
 2024-08-15 12:43:06 [ERROR]: Error getting recommendations:
 2024-08-15 12:45:01 [ERROR]: Error getting recommendations:
 2024-08-15 12:46:18 [ERROR]: Error getting recommendations:
+2024-08-17 12:53:35 [ERROR]: Error getting recommendations: Request failed with status code 404
+2024-08-17 12:53:58 [ERROR]: Error getting recommendations: Request failed with status code 404
+2024-08-17 12:55:00 [ERROR]: Error getting recommendations: Request failed with status code 404

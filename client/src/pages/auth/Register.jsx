@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../../../utils/api';
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import api from '../../../utils/api'
 
 export const Register = () => {
-  const [registrationData, setRegistrationData] = useState({});
-  const navigate = useNavigate();
+  const [registrationData, setRegistrationData] = useState({})
+  const navigate = useNavigate()
 
   const handleRegistration = async () => {
     try {
@@ -13,24 +13,32 @@ export const Register = () => {
         email: registrationData.email,
         password: registrationData.password,
         passwordConfirmation: registrationData.confirmPassword
-      });
+      })
 
       if (response.status === 201) {
         alert(response.data.msg);
-        navigate(`/verify-email/${registrationData.email}`);
+        navigate(`/verify-email/${registrationData.email}`)
       }
     } catch (err) {
-      alert(err.response?.data?.error || 'An error occurred.');
+      alert(err.response?.data?.error || 'An error occurred.')
     }
-  };
+  }
 
   const handleFieldChange = (e) => {
-    const { name, value } = e.target;
-    setRegistrationData(prevData => ({
+    const { name, value } = e.target
+    let formattedValue = value
+  
+    try {
+      formattedValue = JSON.parse(value)
+    } catch (error) {
+      // Ignore parsing errors
+    }
+  
+    setRegistrationData((prevData) => ({
       ...prevData,
-      [name]: value,
-    }));
-  };
+      [name]: formattedValue,
+    }))
+  }
 
   return (
     <form className="flip-card__form">

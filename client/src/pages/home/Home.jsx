@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { ProfileSection } from '../../components/ProfileSection'
+import { ProfileSection } from '../../components/ProfileSection/ProfileSection'
 import './Home.css'
 import RecipeRecommendations from './Recommendation'
 import { useNavigate } from 'react-router-dom'

@@ -11,7 +11,7 @@ const checkRole = (allowedRoles) => {
     const userRole = req.user?.role
     // Handle undefined user role
     if (!userRole) {
-      return res.status(403).json({ msg: 'Access denied. User role is undefined.' });
+      return res.status(403).json({ msg: 'Access denied. User role is undefined.' })
     }
 
     // Check if user's role is included in allowedRoles array

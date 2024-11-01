@@ -39,20 +39,40 @@ app.use(mongoSanitize())
 app.use(helmet())
 app.use(xss())
 
-
 app.use((req, res, next) => {
   // Skip logging for specific routes
-  const skippedRoutes = ['/posts/create-post', '/user/upload-profile-pic'];
+  const skippedRoutes = ['/posts/create-post', '/user/upload-profile-pic']
   if (skippedRoutes.some(route => req.url.startsWith(route))) {
-    return next();
+    return next()
+  }
+
+  // Helper function to mask sensitive fields in the body
+  const maskSensitiveFields = (obj) => {
+    if (obj && typeof obj === 'object') {
+      const maskedObj = { ...obj }
+      if (maskedObj.password) {
+        maskedObj.password = '***' // Mask the password field
+      }
+      Object.keys(maskedObj).forEach(key => {
+        if (typeof maskedObj[key] === 'object') {
+          maskedObj[key] = maskSensitiveFields(maskedObj[key]) // Recursively mask nested objects
+        }
+      })
+      return maskedObj
+    }
+    return obj
   }
 
   const start = Date.now()
   const { method, url, body, params } = req
-  logger.info(`Incoming request: ${method} ${url} - Params: ${JSON.stringify(params)} - Body: ${JSON.stringify(body)}`)
-  
+
+  // Mask sensitive fields in the request body
+  const sanitizedBody = maskSensitiveFields(body)
+
+  logger.info(`Incoming request: ${method} ${url} - Params: ${JSON.stringify(params)} - Body: ${JSON.stringify(sanitizedBody)}`)
+
   res.on('finish', () => {
-    const duration = Date.now() - start
+    const duration = Date.now() - start;
     logger.info(`Request completed: ${method} ${url} - Status: ${res.statusCode} - Duration: ${duration}ms`)
   })
 

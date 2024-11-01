@@ -76,11 +76,11 @@ const registerUser = async (req, res) => {
   const { username, email, password, passwordConfirmation } = req.body
   try {
     // Log the registration attempt
-    logger.info('Registration attempt received', { username, email })
+    logger.info('Registration attempt received', { email })
 
     // Check if all required fields are filled
     if (!username || !email || !password || !passwordConfirmation) {
-      logger.warn('Registration failed: Missing fields', { username, email })
+      logger.warn('Registration failed: Missing fields', { email })
       return res.status(400).json({ error: 'Please fill in all the required fields' })
     }
 
@@ -141,7 +141,7 @@ const registerUser = async (req, res) => {
 
     // Save the new user to the database
     await newUser.save()
-    logger.info('New user saved to the database', { username, email })
+    logger.info('New user saved to the database', { email })
 
     // Send verification email
     await sendVerificationEmail(email, verificationCode)
